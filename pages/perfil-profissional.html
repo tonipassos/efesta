@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Perfil do Profissional — É Festa</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <style>
+    .perfil-page { padding-top: 80px; }
+    .perfil-topo {
+      background: var(--grad-hero);
+      padding: 60px 0 40px;
+      color: white;
+    }
+    .perfil-topo-inner {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 32px;
+      align-items: center;
+    }
+    .avatar-grande {
+      width: 120px;
+      height: 120px;
+      border-radius: 20px;
+      border: 4px solid rgba(255,255,255,0.3);
+      background: var(--grad-rosa);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3.5rem;
+      flex-shrink: 0;
+    }
+    .perfil-nome-h1 {
+      font-family: var(--fonte-display);
+      font-size: 2.4rem;
+      font-weight: 900;
+      margin-bottom: 8px;
+    }
+    .perfil-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      align-items: center;
+      margin-top: 12px;
+    }
+    .meta-tag {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.88rem;
+      color: rgba(255,255,255,0.75);
+    }
+    .perfil-acoes {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .perfil-body {
+      background: var(--cinza-claro);
+      padding: 40px 0;
+    }
+    .perfil-grid {
+      display: grid;
+      grid-template-columns: 1fr 360px;
+      gap: 32px;
+      align-items: start;
+    }
+    .card-perfil {
+      background: white;
+      border-radius: var(--raio);
+      padding: 28px;
+      box-shadow: var(--sombra-card);
+      margin-bottom: 24px;
+    }
+    .card-titulo {
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: var(--cor-terciaria);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .galeria-4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+    .galeria-4 .foto {
+      aspect-ratio: 1;
+      border-radius: var(--raio-sm);
+      overflow: hidden;
+      background: var(--grad-card);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5rem;
+      cursor: pointer;
+      transition: var(--transicao);
+    }
+    .galeria-4 .foto:hover { transform: scale(1.04); }
+    .servicos-lista { display: flex; flex-direction: column; gap: 12px; }
+    .servico-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px;
+      border: 2px solid var(--cinza-medio);
+      border-radius: var(--raio-sm);
+      transition: var(--transicao);
+    }
+    .servico-item:hover { border-color: var(--cor-primaria); }
+    .avaliacao-item {
+      padding: 16px 0;
+      border-bottom: 1px solid var(--cinza-medio);
+    }
+    .avaliacao-item:last-child { border-bottom: none; }
+    .av-topo { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+    .av-autor { display: flex; align-items: center; gap: 10px; }
+    .av-avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--grad-rosa); display: flex; align-items: center; justify-content: center; font-size: 1rem; }
+    .av-nome { font-weight: 600; font-size: 0.88rem; }
+    .av-data { font-size: 0.75rem; color: var(--cinza-texto); }
+    .av-estrelas { color: var(--cor-secundaria); font-size: 0.85rem; }
+    .av-texto { font-size: 0.88rem; color: var(--cinza-texto); line-height: 1.6; }
+
+    .sidebar-contato { position: sticky; top: 100px; }
+    .preco-destaque {
+      font-family: var(--fonte-display);
+      font-size: 2rem;
+      font-weight: 900;
+      color: var(--cor-primaria);
+      margin-bottom: 4px;
+    }
+    .mapa-perfil { height: 220px; border-radius: var(--raio-sm); overflow: hidden; }
+
+    @media(max-width:768px){
+      .perfil-topo-inner { grid-template-columns: 1fr; text-align:center; }
+      .perfil-acoes { flex-direction: row; }
+      .perfil-grid { grid-template-columns: 1fr; }
+      .galeria-4 { grid-template-columns: repeat(2,1fr); }
+      .sidebar-contato { position: static; }
+    }
+  </style>
+</head>
+<body>
+<!-- Header simplificado -->
+<header class="header scrolled" id="header">
+  <div class="container header-inner">
+    <a href="../index.html" class="logo">
+      <div class="logo-icon">🎉</div>
+      <span class="logo-texto">É <span>Festa</span></span>
+    </a>
+    <nav class="nav-links">
+      <a href="../pages/busca.html">← Voltar para busca</a>
+    </nav>
+    <div class="nav-acoes">
+      <a href="#" class="btn-login-nav nav-links" data-modal="modal-login">Entrar</a>
+      <a href="#" class="btn btn-primario btn-sm" data-modal="modal-cadastro">Cadastrar-se</a>
+    </div>
+  </div>
+</header>
+
+<div class="perfil-page">
+  <!-- TOPO DO PERFIL -->
+  <section class="perfil-topo">
+    <div class="container">
+      <div style="font-size:0.82rem;color:rgba(255,255,255,0.5);margin-bottom:16px;">
+        <a href="../index.html" style="color:rgba(255,255,255,0.5);">Início</a> › 
+        <a href="../pages/busca.html" style="color:rgba(255,255,255,0.5);">Buffet</a> › 
+        Buffet Sabor & Arte
+      </div>
+      <div class="perfil-topo-inner">
+        <div class="avatar-grande">🍽️</div>
+        <div>
+          <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+            <h1 class="perfil-nome-h1">Buffet Sabor & Arte</h1>
+            <div style="background:var(--grad-dourado);color:var(--preto-suave);padding:4px 12px;border-radius:100px;font-size:0.75rem;font-weight:700;">✅ Verificado</div>
+            <div class="anuncio-badge-destaque" style="position:static;">⭐ DESTAQUE</div>
+          </div>
+          <p style="color:rgba(255,255,255,0.7);margin-top:8px;max-width:500px;">Buffet completo para casamentos, formaturas e eventos corporativos. Mais de 15 anos de experiência e 2.000+ eventos realizados.</p>
+          <div class="perfil-meta">
+            <div class="meta-tag">🍽️ Buffet & Gastronomia</div>
+            <div class="meta-tag">⭐ 4.9 (247 avaliações)</div>
+            <div class="meta-tag">📍 São Paulo, SP</div>
+            <div class="meta-tag">🕐 Responde em até 2h</div>
+          </div>
+        </div>
+        <div class="perfil-acoes">
+          <a href="https://wa.me/5511999999999" class="btn btn-dourado">💬 WhatsApp</a>
+          <button onclick="mostrarToast('❤️ Adicionado aos favoritos!','sucesso')" class="btn btn-secundario" style="border-color:white;color:white;">♡ Favoritar</button>
+          <button onclick="navigator.share && navigator.share({title:'Buffet Sabor & Arte',url:window.location.href})" class="btn" style="background:rgba(255,255,255,0.1);color:white;border:1px solid rgba(255,255,255,0.2);">🔗 Compartilhar</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BODY DO PERFIL -->
+  <section class="perfil-body">
+    <div class="container">
+      <div class="perfil-grid">
+        <!-- COLUNA PRINCIPAL -->
+        <div>
+          <!-- Galeria de 4 fotos -->
+          <div class="card-perfil">
+            <div class="card-titulo">📷 Galeria de Fotos</div>
+            <div class="galeria-4">
+              <div class="foto">🍽️</div>
+              <div class="foto">🥗</div>
+              <div class="foto">🎂</div>
+              <div class="foto">🥩</div>
+            </div>
+          </div>
+
+          <!-- Sobre -->
+          <div class="card-perfil">
+            <div class="card-titulo">📝 Sobre o Estabelecimento</div>
+            <p style="color:var(--cinza-texto);line-height:1.8;font-size:0.95rem;">
+              O <strong>Buffet Sabor & Arte</strong> é especializado em gastronomia para eventos sociais e corporativos. Com mais de 15 anos de experiência, nossa equipe de chefs altamente treinados prepara cardápios exclusivos que encantam e surpreendem os convidados.
+            </p>
+            <p style="color:var(--cinza-texto);line-height:1.8;font-size:0.95rem;margin-top:12px;">
+              Trabalhamos com ingredientes frescos e de alta qualidade, desde entradas sofisticadas até sobremesas artesanais. Atendemos eventos de 50 a 2.000 pessoas.
+            </p>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:20px;">
+              <div style="background:var(--cinza-claro);border-radius:var(--raio-sm);padding:16px;text-align:center;">
+                <div style="font-family:var(--fonte-display);font-size:1.6rem;font-weight:900;color:var(--cor-primaria);">+2000</div>
+                <div style="font-size:0.78rem;color:var(--cinza-texto);">Eventos realizados</div>
+              </div>
+              <div style="background:var(--cinza-claro);border-radius:var(--raio-sm);padding:16px;text-align:center;">
+                <div style="font-family:var(--fonte-display);font-size:1.6rem;font-weight:900;color:var(--cor-primaria);">15+</div>
+                <div style="font-size:0.78rem;color:var(--cinza-texto);">Anos de experiência</div>
+              </div>
+              <div style="background:var(--cinza-claro);border-radius:var(--raio-sm);padding:16px;text-align:center;">
+                <div style="font-family:var(--fonte-display);font-size:1.6rem;font-weight:900;color:var(--cor-primaria);">4.9★</div>
+                <div style="font-size:0.78rem;color:var(--cinza-texto);">Avaliação média</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Serviços -->
+          <div class="card-perfil">
+            <div class="card-titulo">🛎️ Serviços Oferecidos</div>
+            <div class="servicos-lista">
+              <div class="servico-item">
+                <div>
+                  <div style="font-weight:600;font-size:0.92rem;">Buffet Completo para Casamentos</div>
+                  <div style="font-size:0.8rem;color:var(--cinza-texto);">Entrada, prato principal, sobremesa, bebidas</div>
+                </div>
+                <div style="color:var(--cor-verde);font-weight:700;white-space:nowrap;">R$ 120/pessoa</div>
+              </div>
+              <div class="servico-item">
+                <div>
+                  <div style="font-weight:600;font-size:0.92rem;">Buffet para Formaturas</div>
+                  <div style="font-size:0.8rem;color:var(--cinza-texto);">Cardápio temático + decoração de mesa</div>
+                </div>
+                <div style="color:var(--cor-verde);font-weight:700;white-space:nowrap;">R$ 89/pessoa</div>
+              </div>
+              <div class="servico-item">
+                <div>
+                  <div style="font-weight:600;font-size:0.92rem;">Coffee Break Corporativo</div>
+                  <div style="font-size:0.8rem;color:var(--cinza-texto);">Finger food, coffee, sucos naturais</div>
+                </div>
+                <div style="color:var(--cor-verde);font-weight:700;white-space:nowrap;">R$ 45/pessoa</div>
+              </div>
+              <div class="servico-item">
+                <div>
+                  <div style="font-weight:600;font-size:0.92rem;">Churrasco para Eventos</div>
+                  <div style="font-size:0.8rem;color:var(--cinza-texto);">Carnes premium + acompanhamentos</div>
+                </div>
+                <div style="color:var(--cor-verde);font-weight:700;white-space:nowrap;">R$ 75/pessoa</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Avaliações -->
+          <div class="card-perfil">
+            <div class="card-titulo">⭐ Avaliações dos Clientes</div>
+            <div style="display:flex;align-items:center;gap:24px;margin-bottom:24px;padding-bottom:20px;border-bottom:2px solid var(--cinza-medio);">
+              <div style="text-align:center;">
+                <div style="font-family:var(--fonte-display);font-size:4rem;font-weight:900;color:var(--cor-terciaria);line-height:1;">4.9</div>
+                <div style="color:var(--cor-secundaria);font-size:1.2rem;">★★★★★</div>
+                <div style="font-size:0.78rem;color:var(--cinza-texto);">247 avaliações</div>
+              </div>
+              <div style="flex:1;">
+                <div style="display:flex;flex-direction:column;gap:6px;">
+                  <div style="display:flex;align-items:center;gap:8px;">
+                    <span style="font-size:0.8rem;color:var(--cinza-texto);width:16px;">5</span>
+                    <div style="flex:1;height:6px;background:var(--cinza-medio);border-radius:3px;overflow:hidden;"><div style="width:82%;height:100%;background:var(--cor-secundaria);border-radius:3px;"></div></div>
+                    <span style="font-size:0.78rem;color:var(--cinza-texto);width:30px;">82%</span>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:8px;">
+                    <span style="font-size:0.8rem;color:var(--cinza-texto);width:16px;">4</span>
+                    <div style="flex:1;height:6px;background:var(--cinza-medio);border-radius:3px;overflow:hidden;"><div style="width:13%;height:100%;background:var(--cor-secundaria);border-radius:3px;"></div></div>
+                    <span style="font-size:0.78rem;color:var(--cinza-texto);width:30px;">13%</span>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:8px;">
+                    <span style="font-size:0.8rem;color:var(--cinza-texto);width:16px;">3</span>
+                    <div style="flex:1;height:6px;background:var(--cinza-medio);border-radius:3px;overflow:hidden;"><div style="width:4%;height:100%;background:var(--cor-secundaria);border-radius:3px;"></div></div>
+                    <span style="font-size:0.78rem;color:var(--cinza-texto);width:30px;">4%</span>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:8px;">
+                    <span style="font-size:0.8rem;color:var(--cinza-texto);width:16px;">2</span>
+                    <div style="flex:1;height:6px;background:var(--cinza-medio);border-radius:3px;overflow:hidden;"><div style="width:1%;height:100%;background:var(--cor-secundaria);border-radius:3px;"></div></div>
+                    <span style="font-size:0.78rem;color:var(--cinza-texto);width:30px;">1%</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Avaliações individuais -->
+            <div class="avaliacao-item">
+              <div class="av-topo">
+                <div class="av-autor">
+                  <div class="av-avatar">👰</div>
+                  <div>
+                    <div class="av-nome">Ana Paula Souza</div>
+                    <div class="av-data">Janeiro 2025 · Casamento</div>
+                  </div>
+                </div>
+                <div class="av-estrelas">★★★★★</div>
+              </div>
+              <p class="av-texto">"Simplesmente perfeito! Todos os convidados do meu casamento não paravam de elogiar a comida. Profissionalismo impecável, pontualidade e qualidade incomparáveis."</p>
+            </div>
+            <div class="avaliacao-item">
+              <div class="av-topo">
+                <div class="av-autor">
+                  <div class="av-avatar">🎓</div>
+                  <div>
+                    <div class="av-nome">Carlos Mendes</div>
+                    <div class="av-data">Dezembro 2024 · Formatura</div>
+                  </div>
+                </div>
+                <div class="av-estrelas">★★★★★</div>
+              </div>
+              <p class="av-texto">"Contratei para a formatura da turma inteira e foi incrível. Buffet farto, apresentação impecável e equipe muito atenciosa. Vale cada centavo!"</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- SIDEBAR -->
+        <div class="sidebar-contato">
+          <div class="card-perfil" style="border: 2px solid var(--cor-primaria);">
+            <div class="preco-destaque">R$ 89<span style="font-size:1rem;font-weight:400;color:var(--cinza-texto);">/pessoa</span></div>
+            <p style="font-size:0.82rem;color:var(--cinza-texto);margin-bottom:20px;">Preço médio. Orçamento personalizado mediante consulta.</p>
+
+            <a href="https://wa.me/5511999999999?text=Olá! Vi seu perfil no É Festa e gostaria de um orçamento." class="btn btn-primario" style="width:100%;justify-content:center;margin-bottom:12px;">💬 Entrar em contato</a>
+            <a href="tel:+5511999999999" class="btn btn-secundario" style="width:100%;justify-content:center;margin-bottom:12px;">📞 Ligar agora</a>
+            <button onclick="mostrarToast('❤️ Adicionado aos favoritos!','sucesso')" class="btn" style="width:100%;justify-content:center;background:var(--cinza-claro);color:var(--cor-terciaria);">♡ Salvar perfil</button>
+
+            <hr style="border:none;border-top:1px solid var(--cinza-medio);margin:20px 0;">
+            <div style="display:flex;flex-direction:column;gap:10px;">
+              <div style="display:flex;align-items:center;gap:10px;font-size:0.85rem;">
+                <span style="font-size:1rem;">📍</span>
+                <span style="color:var(--cinza-texto);">São Paulo, SP — Zona Sul</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:10px;font-size:0.85rem;">
+                <span style="font-size:1rem;">🕐</span>
+                <span style="color:var(--cinza-texto);">Responde em até 2 horas</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:10px;font-size:0.85rem;">
+                <span style="font-size:1rem;">👥</span>
+                <span style="color:var(--cinza-texto);">Atende de 50 a 2.000 pessoas</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:10px;font-size:0.85rem;">
+                <span style="font-size:1rem;">💳</span>
+                <span style="color:var(--cinza-texto);">Aceita Pix, cartão e boleto</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Mapa -->
+          <div class="card-perfil">
+            <div class="card-titulo">📍 Localização</div>
+            <div class="mapa-perfil" id="mapa-perfil"></div>
+            <p style="font-size:0.8rem;color:var(--cinza-texto);margin-top:10px;">Av. Paulista, 1000 — São Paulo, SP</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="../js/main.js"></script>
+<script>
+  // Inicializa o mapa do perfil
+  document.addEventListener('DOMContentLoaded', () => {
+    const mapa = L.map('mapa-perfil', { zoomControl: false }).setView([-23.561414, -46.655881], 14);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap'
+    }).addTo(mapa);
+    L.marker([-23.561414, -46.655881]).addTo(mapa)
+      .bindPopup('<b>Buffet Sabor & Arte</b><br>São Paulo, SP').openPopup();
+  });
+</script>
+</body>
+</html>

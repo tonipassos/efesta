@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Painel Administrativo — É Festa</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    body { background: var(--cinza-claro); }
+    .admin-topbar {
+      height: 64px;
+      background: white;
+      border-bottom: 1px solid var(--cinza-medio);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 32px;
+      position: fixed;
+      top: 0;
+      left: 260px;
+      right: 0;
+      z-index: 50;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    .admin-sidebar { padding-top: 0; }
+    .admin-logo-sidebar {
+      padding: 20px 24px 30px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      margin-bottom: 12px;
+    }
+    .nav-group-title {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: rgba(255,255,255,0.3);
+      padding: 16px 24px 6px;
+    }
+    .badge-nav {
+      margin-left: auto;
+      background: var(--cor-primaria);
+      color: white;
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 100px;
+    }
+    .admin-main { padding-top: 96px; }
+    .page-titulo {
+      font-family: var(--fonte-display);
+      font-size: 1.8rem;
+      font-weight: 900;
+      color: var(--cor-terciaria);
+      margin-bottom: 4px;
+    }
+    .tabela-admin {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+    }
+    .tabela-admin th {
+      background: var(--cinza-claro);
+      padding: 12px 16px;
+      text-align: left;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--cinza-texto);
+    }
+    .tabela-admin td {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--cinza-medio);
+      color: var(--preto-suave);
+    }
+    .tabela-admin tr:hover td { background: var(--cinza-claro); }
+    .status-ativo { background: rgba(0,200,150,0.1); color: var(--cor-verde); padding: 4px 10px; border-radius: 100px; font-size: 0.75rem; font-weight: 700; }
+    .status-pendente { background: rgba(245,166,35,0.1); color: var(--cor-secundaria); padding: 4px 10px; border-radius: 100px; font-size: 0.75rem; font-weight: 700; }
+    .status-bloqueado { background: rgba(232,22,60,0.1); color: var(--cor-primaria); padding: 4px 10px; border-radius: 100px; font-size: 0.75rem; font-weight: 700; }
+    .acao-btn { padding: 6px 12px; border-radius: var(--raio-sm); font-size: 0.78rem; font-weight: 600; cursor: pointer; transition: var(--transicao); border: none; margin: 0 2px; }
+    .acao-ver { background: var(--cinza-claro); color: var(--cor-terciaria); }
+    .acao-bloquear { background: rgba(232,22,60,0.1); color: var(--cor-primaria); }
+    .acao-aprovar { background: rgba(0,200,150,0.1); color: var(--cor-verde); }
+    .grafico-barra {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .gb-item { display: flex; align-items: center; gap: 12px; }
+    .gb-label { font-size: 0.82rem; color: var(--cinza-texto); width: 120px; flex-shrink: 0; }
+    .gb-barra-wrap { flex: 1; height: 8px; background: var(--cinza-medio); border-radius: 4px; overflow: hidden; }
+    .gb-barra { height: 100%; border-radius: 4px; background: var(--grad-rosa); }
+    .gb-val { font-size: 0.82rem; font-weight: 600; color: var(--cor-terciaria); width: 50px; text-align: right; }
+    .admin-card-acao {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px;
+      background: var(--cinza-claro);
+      border-radius: var(--raio-sm);
+      margin-bottom: 12px;
+      cursor: pointer;
+      transition: var(--transicao);
+    }
+    .admin-card-acao:hover { background: rgba(232,22,60,0.05); }
+    .admin-card-acao .emoji { font-size: 1.6rem; }
+    .tabs-admin { display: flex; gap: 4px; margin-bottom: 24px; border-bottom: 2px solid var(--cinza-medio); }
+    .tab-admin {
+      padding: 10px 20px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--cinza-texto);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -2px;
+      transition: var(--transicao);
+      background: none;
+      border-left: none;
+      border-right: none;
+      border-top: none;
+    }
+    .tab-admin.ativo { color: var(--cor-primaria); border-bottom-color: var(--cor-primaria); }
+  </style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="admin-sidebar">
+  <div class="admin-logo-sidebar">
+    <a href="../index.html" class="logo">
+      <div class="logo-icon">🎉</div>
+      <span class="logo-texto">É <span>Festa</span></span>
+    </a>
+    <div style="font-size:0.72rem;color:rgba(255,255,255,0.4);margin-top:4px;">Painel Administrativo</div>
+  </div>
+
+  <div class="nav-group-title">Visão Geral</div>
+  <div class="admin-nav-item ativo" onclick="mostrarSecao('dashboard')">📊 Dashboard</div>
+  <div class="admin-nav-item" onclick="mostrarSecao('metricas')">📈 Métricas & Relatórios</div>
+
+  <div class="nav-group-title">Usuários</div>
+  <div class="admin-nav-item" onclick="mostrarSecao('usuarios')">👤 Usuários <span class="badge-nav">28.432</span></div>
+  <div class="admin-nav-item" onclick="mostrarSecao('profissionais')">🏢 Profissionais <span class="badge-nav">5.210</span></div>
+  <div class="admin-nav-item" onclick="mostrarSecao('pendentes')">⏳ Aprovações Pendentes <span class="badge-nav" style="background:var(--cor-secundaria);color:var(--preto-suave);">12</span></div>
+
+  <div class="nav-group-title">Conteúdo</div>
+  <div class="admin-nav-item" onclick="mostrarSecao('anuncios')">📣 Anúncios em Destaque</div>
+  <div class="admin-nav-item" onclick="mostrarSecao('avaliacoes')">⭐ Avaliações</div>
+  <div class="admin-nav-item" onclick="mostrarSecao('denuncias')">🚩 Denúncias <span class="badge-nav">3</span></div>
+
+  <div class="nav-group-title">Financeiro</div>
+  <div class="admin-nav-item" onclick="mostrarSecao('pagamentos')">💳 Pagamentos</div>
+  <div class="admin-nav-item" onclick="mostrarSecao('assinaturas')">🔄 Assinaturas Ativas</div>
+  <div class="admin-nav-item" onclick="mostrarSecao('financeiro')">💰 Extrato Financeiro</div>
+
+  <div class="nav-group-title">Configurações</div>
+  <div class="admin-nav-item" onclick="mostrarSecao('categorias-adm')">🏷️ Categorias</div>
+  <div class="admin-nav-item" onclick="mostrarSecao('configuracoes')">⚙️ Configurações</div>
+  <div class="admin-nav-item" onclick="mostrarSecao('cms')">📄 Páginas & Conteúdo</div>
+
+  <div style="padding: 20px 24px; margin-top: auto; border-top: 1px solid rgba(255,255,255,0.08);">
+    <div style="display:flex;align-items:center;gap:10px;">
+      <div style="width:36px;height:36px;background:var(--grad-rosa);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1rem;">👑</div>
+      <div>
+        <div style="font-size:0.85rem;font-weight:600;color:white;">Admin Master</div>
+        <div style="font-size:0.72rem;color:rgba(255,255,255,0.4);">admin@efesta.com.br</div>
+      </div>
+    </div>
+    <a href="../index.html" style="display:block;margin-top:12px;font-size:0.8rem;color:rgba(255,255,255,0.4);">← Voltar ao site</a>
+  </div>
+</aside>
+
+<!-- TOPBAR -->
+<div class="admin-topbar">
+  <div>
+    <div class="page-titulo" id="topbar-titulo">Dashboard</div>
+    <div style="font-size:0.8rem;color:var(--cinza-texto);" id="topbar-sub">Bem-vindo(a), Admin. Aqui está o resumo do dia.</div>
+  </div>
+  <div style="display:flex;align-items:center;gap:12px;">
+    <button style="background:var(--cinza-claro);border:none;border-radius:100px;padding:8px 16px;font-size:0.85rem;cursor:pointer;font-family:var(--fonte-corpo);color:var(--cor-terciaria);">🔔 3 alertas</button>
+    <a href="../index.html" class="btn btn-primario btn-sm">🔗 Ver Site</a>
+  </div>
+</div>
+
+<!-- MAIN -->
+<main class="admin-main">
+
+  <!-- ===== DASHBOARD ===== -->
+  <div id="secao-dashboard">
+    <div class="stats-grid-admin">
+      <div class="stat-admin-card" style="border-color:var(--cor-primaria);">
+        <div class="stat-admin-val">28.432</div>
+        <div class="stat-admin-label">Total de Usuários</div>
+        <div style="font-size:0.78rem;color:var(--cor-verde);margin-top:4px;">↑ +127 esta semana</div>
+      </div>
+      <div class="stat-admin-card" style="border-color:var(--cor-secundaria);">
+        <div class="stat-admin-val">5.210</div>
+        <div class="stat-admin-label">Profissionais Ativos</div>
+        <div style="font-size:0.78rem;color:var(--cor-verde);margin-top:4px;">↑ +43 esta semana</div>
+      </div>
+      <div class="stat-admin-card" style="border-color:var(--cor-verde);">
+        <div class="stat-admin-val">R$48.7K</div>
+        <div class="stat-admin-label">Receita do Mês</div>
+        <div style="font-size:0.78rem;color:var(--cor-verde);margin-top:4px;">↑ +18% vs mês anterior</div>
+      </div>
+      <div class="stat-admin-card" style="border-color:var(--cor-acento);">
+        <div class="stat-admin-val">3.841</div>
+        <div class="stat-admin-label">Assinaturas Ativas</div>
+        <div style="font-size:0.78rem;color:var(--cor-verde);margin-top:4px;">↑ +89 esta semana</div>
+      </div>
+      <div class="stat-admin-card" style="border-color:#B931FC;">
+        <div class="stat-admin-val">12.308</div>
+        <div class="stat-admin-label">Buscas Hoje</div>
+        <div style="font-size:0.78rem;color:var(--cinza-texto);margin-top:4px;">↕ Comparado a ontem</div>
+      </div>
+      <div class="stat-admin-card" style="border-color:#00C896;">
+        <div class="stat-admin-val">94.2%</div>
+        <div class="stat-admin-label">Taxa de Satisfação</div>
+        <div style="font-size:0.78rem;color:var(--cor-verde);margin-top:4px;">↑ Baseado em avaliações</div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:2fr 1fr;gap:24px;">
+      <!-- Atividade recente -->
+      <div class="stat-admin-card" style="border-left-color:var(--cor-primaria);">
+        <div style="font-weight:700;color:var(--cor-terciaria);margin-bottom:20px;font-size:1rem;">📋 Atividade Recente</div>
+        <div style="display:flex;flex-direction:column;gap:14px;">
+          <div style="display:flex;align-items:center;gap:12px;padding:10px;background:var(--cinza-claro);border-radius:var(--raio-sm);">
+            <span style="font-size:1.4rem;">🏢</span>
+            <div>
+              <div style="font-size:0.88rem;font-weight:600;">Novo cadastro: Studio Festas RJ</div>
+              <div style="font-size:0.75rem;color:var(--cinza-texto);">Aguardando aprovação · Há 5 min</div>
+            </div>
+            <button class="acao-btn acao-aprovar" style="margin-left:auto;" onclick="mostrarToast('✅ Perfil aprovado!','sucesso')">Aprovar</button>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;padding:10px;background:var(--cinza-claro);border-radius:var(--raio-sm);">
+            <span style="font-size:1.4rem;">💳</span>
+            <div>
+              <div style="font-size:0.88rem;font-weight:600;">Pagamento recebido: R$ 149,00</div>
+              <div style="font-size:0.75rem;color:var(--cinza-texto);">Plano Premium · DJ Marcos Vibe · Há 12 min</div>
+            </div>
+            <span class="status-ativo" style="margin-left:auto;">Pago</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;padding:10px;background:var(--cinza-claro);border-radius:var(--raio-sm);">
+            <span style="font-size:1.4rem;">🚩</span>
+            <div>
+              <div style="font-size:0.88rem;font-weight:600;">Nova denúncia: Buffet São João</div>
+              <div style="font-size:0.75rem;color:var(--cinza-texto);">Perfil suspeito · Há 28 min</div>
+            </div>
+            <button class="acao-btn acao-ver" style="margin-left:auto;">Revisar</button>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;padding:10px;background:var(--cinza-claro);border-radius:var(--raio-sm);">
+            <span style="font-size:1.4rem;">⭐</span>
+            <div>
+              <div style="font-size:0.88rem;font-weight:600;">Nova avaliação 5★: Buffet Sabor & Arte</div>
+              <div style="font-size:0.75rem;color:var(--cinza-texto);">Por Ana Paula Souza · Há 1h</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Categorias populares -->
+      <div class="stat-admin-card" style="border-left-color:var(--cor-secundaria);">
+        <div style="font-weight:700;color:var(--cor-terciaria);margin-bottom:20px;font-size:1rem;">🏆 Categorias Populares</div>
+        <div class="grafico-barra">
+          <div class="gb-item"><span class="gb-label">Buffet</span><div class="gb-barra-wrap"><div class="gb-barra" style="width:88%"></div></div><span class="gb-val">2.1K</span></div>
+          <div class="gb-item"><span class="gb-label">Decoração</span><div class="gb-barra-wrap"><div class="gb-barra" style="width:74%"></div></div><span class="gb-val">1.8K</span></div>
+          <div class="gb-item"><span class="gb-label">Foto & Vídeo</span><div class="gb-barra-wrap"><div class="gb-barra" style="width:62%"></div></div><span class="gb-val">1.5K</span></div>
+          <div class="gb-item"><span class="gb-label">Casamentos</span><div class="gb-barra-wrap"><div class="gb-barra" style="width:55%"></div></div><span class="gb-val">1.3K</span></div>
+          <div class="gb-item"><span class="gb-label">Salões</span><div class="gb-barra-wrap"><div class="gb-barra" style="width:48%"></div></div><span class="gb-val">1.1K</span></div>
+          <div class="gb-item"><span class="gb-label">DJ & Música</span><div class="gb-barra-wrap"><div class="gb-barra" style="width:40%"></div></div><span class="gb-val">960</span></div>
+          <div class="gb-item"><span class="gb-label">Doces & Bolos</span><div class="gb-barra-wrap"><div class="gb-barra" style="width:32%"></div></div><span class="gb-val">780</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== USUÁRIOS ===== -->
+  <div id="secao-usuarios" style="display:none;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;">
+      <div>
+        <h2 class="page-titulo" style="font-size:1.4rem;">👤 Usuários</h2>
+      </div>
+      <div style="display:flex;gap:12px;">
+        <input type="text" placeholder="Buscar usuário..." style="padding:10px 16px;border:2px solid var(--cinza-medio);border-radius:100px;font-family:var(--fonte-corpo);font-size:0.88rem;outline:none;">
+        <button onclick="mostrarToast('📤 Exportando lista...','sucesso')" class="btn btn-secundario btn-sm">📤 Exportar</button>
+      </div>
+    </div>
+    <div class="stat-admin-card" style="padding:0;overflow:hidden;">
+      <table class="tabela-admin">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Nome</th>
+            <th>E-mail</th>
+            <th>Telefone</th>
+            <th>Cadastro</th>
+            <th>Status</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td><strong>Ana Paula Souza</strong></td>
+            <td>ana@email.com</td>
+            <td>(11) 99999-0001</td>
+            <td>10/01/2025</td>
+            <td><span class="status-ativo">Ativo</span></td>
+            <td>
+              <button class="acao-btn acao-ver">Ver</button>
+              <button class="acao-btn acao-bloquear" onclick="mostrarToast('⚠️ Usuário bloqueado','')">Bloquear</button>
+            </td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td><strong>Carlos Mendes</strong></td>
+            <td>carlos@email.com</td>
+            <td>(21) 98888-0002</td>
+            <td>12/01/2025</td>
+            <td><span class="status-ativo">Ativo</span></td>
+            <td>
+              <button class="acao-btn acao-ver">Ver</button>
+              <button class="acao-btn acao-bloquear" onclick="mostrarToast('⚠️ Usuário bloqueado','')">Bloquear</button>
+            </td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td><strong>Beatriz Costa</strong></td>
+            <td>bea@email.com</td>
+            <td>(31) 97777-0003</td>
+            <td>15/01/2025</td>
+            <td><span class="status-pendente">Pendente</span></td>
+            <td>
+              <button class="acao-btn acao-ver">Ver</button>
+              <button class="acao-btn acao-aprovar" onclick="mostrarToast('✅ Usuário aprovado!','sucesso')">Aprovar</button>
+            </td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td><strong>João Silva</strong></td>
+            <td>joao@email.com</td>
+            <td>(41) 96666-0004</td>
+            <td>18/01/2025</td>
+            <td><span class="status-bloqueado">Bloqueado</span></td>
+            <td>
+              <button class="acao-btn acao-ver">Ver</button>
+              <button class="acao-btn acao-aprovar" onclick="mostrarToast('✅ Usuário desbloqueado!','sucesso')">Desbloquear</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ===== FINANCEIRO ===== -->
+  <div id="secao-financeiro" style="display:none;">
+    <h2 class="page-titulo" style="font-size:1.4rem;margin-bottom:24px;">💰 Extrato Financeiro</h2>
+    <div class="stats-grid-admin" style="grid-template-columns:repeat(3,1fr);">
+      <div class="stat-admin-card" style="border-color:var(--cor-verde);">
+        <div class="stat-admin-val" style="color:var(--cor-verde);">R$48.720</div>
+        <div class="stat-admin-label">Receita Total (Mês)</div>
+      </div>
+      <div class="stat-admin-card" style="border-color:var(--cor-secundaria);">
+        <div class="stat-admin-val">3.841</div>
+        <div class="stat-admin-label">Assinaturas Ativas</div>
+      </div>
+      <div class="stat-admin-card" style="border-color:var(--cor-acento);">
+        <div class="stat-admin-val">R$12.300</div>
+        <div class="stat-admin-label">Anúncios Destaque</div>
+      </div>
+    </div>
+    <div class="stat-admin-card" style="padding:0;overflow:hidden;margin-top:0;">
+      <div style="padding:20px 24px;border-bottom:1px solid var(--cinza-medio);font-weight:700;color:var(--cor-terciaria);">Últimas transações</div>
+      <table class="tabela-admin">
+        <thead>
+          <tr>
+            <th>Data</th>
+            <th>Profissional</th>
+            <th>Tipo</th>
+            <th>Valor</th>
+            <th>Status</th>
+            <th>Método</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>26/03/2025</td><td>DJ Marcos Vibe</td><td>Plano Premium</td><td><strong>R$ 149,00</strong></td><td><span class="status-ativo">Pago</span></td><td>Mercado Pago</td></tr>
+          <tr><td>25/03/2025</td><td>Studio Flor & Vida</td><td>Anúncio Destaque</td><td><strong>R$ 89,00</strong></td><td><span class="status-ativo">Pago</span></td><td>Cartão</td></tr>
+          <tr><td>25/03/2025</td><td>Lente Mágica</td><td>Plano Profissional</td><td><strong>R$ 89,00</strong></td><td><span class="status-ativo">Pago</span></td><td>Pix</td></tr>
+          <tr><td>24/03/2025</td><td>Buffet Sabor & Arte</td><td>Anúncio Destaque</td><td><strong>R$ 249,00</strong></td><td><span class="status-ativo">Pago</span></td><td>Mercado Pago</td></tr>
+          <tr><td>24/03/2025</td><td>Doce Vida Confeitaria</td><td>Plano Premium</td><td><strong>R$ 149,00</strong></td><td><span class="status-pendente">Pendente</span></td><td>Boleto</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script src="../js/main.js"></script>
+<script>
+function mostrarSecao(id) {
+  document.querySelectorAll('[id^="secao-"]').forEach(s => s.style.display = 'none');
+  const el = document.getElementById('secao-' + id);
+  if (el) el.style.display = 'block';
+  document.querySelectorAll('.admin-nav-item').forEach(n => n.classList.remove('ativo'));
+  event.target.classList.add('ativo');
+  const titulos = {
+    dashboard:'Dashboard',usuarios:'Usuários',profissionais:'Profissionais',
+    pagamentos:'Pagamentos',financeiro:'Extrato Financeiro',pendentes:'Aprovações Pendentes',
+    anuncios:'Anúncios em Destaque',avaliacoes:'Avaliações',denuncias:'Denúncias',
+    configuracoes:'Configurações',metricas:'Métricas & Relatórios',
+    categorias_adm:'Categorias',cms:'Páginas & Conteúdo',assinaturas:'Assinaturas'
+  };
+  document.getElementById('topbar-titulo').textContent = titulos[id] || 'Painel';
+  document.getElementById('topbar-sub').textContent = 'Gerenciamento › ' + (titulos[id] || id);
+}
+</script>
+</body>
+</html>

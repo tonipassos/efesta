@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Painel do Profissional — É Festa</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <style>
+    .painel-page { padding-top: 80px; min-height: 100vh; background: var(--cinza-claro); }
+    .painel-hero { background: var(--grad-hero); padding: 40px 0; color: white; }
+    .painel-grid { display: grid; grid-template-columns: 260px 1fr; gap: 24px; padding: 32px 0; align-items: start; }
+    .painel-sidebar { background: white; border-radius: var(--raio); overflow: hidden; box-shadow: var(--sombra-card); position: sticky; top: 100px; }
+    .painel-avatar { background: var(--grad-hero); padding: 28px 24px; text-align: center; }
+    .avatar-circle { width: 80px; height: 80px; border-radius: 16px; background: var(--grad-rosa); display: flex; align-items: center; justify-content: center; font-size: 2.5rem; margin: 0 auto 12px; border: 3px solid rgba(255,255,255,0.3); }
+    .painel-nav { padding: 12px 0; }
+    .painel-nav-item { display: flex; align-items: center; gap: 10px; padding: 12px 20px; font-size: 0.88rem; font-weight: 500; color: var(--cinza-texto); cursor: pointer; transition: var(--transicao); }
+    .painel-nav-item:hover, .painel-nav-item.ativo { color: var(--cor-primaria); background: rgba(232,22,60,0.05); border-right: 3px solid var(--cor-primaria); }
+    .painel-card { background: white; border-radius: var(--raio); padding: 28px; box-shadow: var(--sombra-card); }
+    .painel-card-titulo { font-weight: 700; font-size: 1rem; color: var(--cor-terciaria); margin-bottom: 20px; display: flex; align-items: center; gap: 8px; }
+    .metrica-card { background: var(--cinza-claro); border-radius: var(--raio-sm); padding: 16px; text-align: center; }
+    .metrica-num { font-family: var(--fonte-display); font-size: 2rem; font-weight: 900; color: var(--cor-terciaria); }
+    .metrica-label { font-size: 0.75rem; color: var(--cinza-texto); }
+    .foto-slot { aspect-ratio: 1; border: 2px dashed var(--cinza-medio); border-radius: var(--raio-sm); display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 1.5rem; cursor: pointer; transition: var(--transicao); background: var(--cinza-claro); gap: 4px; }
+    .foto-slot:hover { border-color: var(--cor-primaria); }
+    .plano-status { display: flex; align-items: center; justify-content: space-between; padding: 16px; background: rgba(0,200,150,0.05); border: 1px solid rgba(0,200,150,0.2); border-radius: var(--raio-sm); margin-bottom: 16px; }
+    .contato-item { display: flex; align-items: center; gap: 12px; padding: 12px; background: var(--cinza-claro); border-radius: var(--raio-sm); margin-bottom: 8px; }
+    @media(max-width:768px){ .painel-grid { grid-template-columns: 1fr; } .painel-sidebar { position: static; } }
+  </style>
+</head>
+<body>
+
+<header class="header scrolled">
+  <div class="container header-inner">
+    <a href="../index.html" class="logo"><div class="logo-icon">🎉</div><span class="logo-texto">É <span>Festa</span></span></a>
+    <div class="nav-acoes">
+      <a href="perfil-profissional.html?id=1" class="btn btn-secundario btn-sm">👁️ Ver meu perfil público</a>
+      <a href="../index.html" class="btn btn-primario btn-sm">← Sair</a>
+    </div>
+  </div>
+</header>
+
+<div class="painel-page">
+  <section class="painel-hero">
+    <div class="container">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;">
+        <div style="display:flex;align-items:center;gap:16px;">
+          <div style="width:60px;height:60px;background:var(--grad-rosa);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:2rem;border:3px solid rgba(255,255,255,0.3);">🍽️</div>
+          <div>
+            <h1 style="font-family:var(--fonte-display);font-size:1.8rem;font-weight:900;">Buffet Sabor & Arte</h1>
+            <div style="display:flex;gap:12px;flex-wrap:wrap;">
+              <span style="color:rgba(255,255,255,0.7);font-size:0.82rem;">✅ Perfil verificado</span>
+              <span style="color:var(--cor-secundaria);font-size:0.82rem;">⭐ DESTAQUE ATIVO</span>
+              <span style="color:rgba(255,255,255,0.7);font-size:0.82rem;">Plano Premium</span>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;">
+          <a href="perfil-profissional.html?id=1" class="btn btn-branco btn-sm">👁️ Ver perfil público</a>
+          <button onclick="mostrarToast('💳 Redirecionando para pagamento...','sucesso')" class="btn btn-dourado btn-sm">💛 Contratar destaque</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <div class="painel-grid">
+
+        <!-- Sidebar -->
+        <div class="painel-sidebar">
+          <div class="painel-avatar">
+            <div class="avatar-circle">🍽️</div>
+            <div style="font-weight:700;color:white;font-size:0.95rem;">Buffet Sabor & Arte</div>
+            <div style="font-size:0.72rem;color:rgba(255,255,255,0.6);margin-top:4px;">buffet@saborearte.com.br</div>
+            <div style="margin-top:12px;background:rgba(0,200,150,0.2);color:#00C896;padding:4px 12px;border-radius:100px;font-size:0.72rem;font-weight:700;display:inline-block;">● ONLINE</div>
+          </div>
+          <nav class="painel-nav">
+            <div class="painel-nav-item ativo" onclick="mostrarSecaoProf('dashboard',this)">📊 Dashboard</div>
+            <div class="painel-nav-item" onclick="mostrarSecaoProf('perfil',this)">✏️ Editar perfil</div>
+            <div class="painel-nav-item" onclick="mostrarSecaoProf('fotos',this)">📷 Gerenciar fotos</div>
+            <div class="painel-nav-item" onclick="mostrarSecaoProf('avaliacoes',this)">⭐ Avaliações recebidas</div>
+            <div class="painel-nav-item" onclick="mostrarSecaoProf('anuncios',this)">📣 Anúncios em destaque</div>
+            <div class="painel-nav-item" onclick="mostrarSecaoProf('assinatura',this)">💳 Assinatura & Pagamento</div>
+            <div class="painel-nav-item" onclick="mostrarSecaoProf('mapa',this)">📍 Minha localização</div>
+            <div style="border-top:1px solid var(--cinza-medio);margin:8px 0;"></div>
+            <div class="painel-nav-item" style="color:var(--cinza-texto);" onclick="mostrarToast('👋 Você saiu da conta','')">↩️ Sair</div>
+          </nav>
+        </div>
+
+        <!-- Conteúdo -->
+        <div style="display:flex;flex-direction:column;gap:20px;">
+
+          <!-- Dashboard -->
+          <div id="secao-prof-dashboard">
+            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:20px;">
+              <div class="metrica-card"><div class="metrica-num" style="color:var(--cor-primaria);">1.240</div><div class="metrica-label">Visualizações do perfil</div></div>
+              <div class="metrica-card"><div class="metrica-num" style="color:var(--cor-secundaria);">87</div><div class="metrica-label">Cliques no WhatsApp</div></div>
+              <div class="metrica-card"><div class="metrica-num" style="color:var(--cor-verde);">247</div><div class="metrica-label">Avaliações totais</div></div>
+              <div class="metrica-card"><div class="metrica-num" style="color:#B931FC;">4.9★</div><div class="metrica-label">Média de avaliações</div></div>
+            </div>
+
+            <div class="painel-card">
+              <div class="painel-card-titulo">📈 Contatos recebidos via plataforma</div>
+              <div style="display:flex;flex-direction:column;gap:10px;">
+                <div class="contato-item">
+                  <span style="font-size:1.4rem;">📱</span>
+                  <div style="flex:1;"><div style="font-size:0.88rem;font-weight:600;">Camila Rodrigues entrou em contato</div><div style="font-size:0.75rem;color:var(--cinza-texto);">Clicou no WhatsApp · Hoje às 15:22</div></div>
+                  <span class="status-ativo">Novo</span>
+                </div>
+                <div class="contato-item">
+                  <span style="font-size:1.4rem;">👁️</span>
+                  <div style="flex:1;"><div style="font-size:0.88rem;font-weight:600;">João Silva visitou seu perfil</div><div style="font-size:0.75rem;color:var(--cinza-texto);">3x hoje · São Paulo, SP</div></div>
+                </div>
+                <div class="contato-item">
+                  <span style="font-size:1.4rem;">⭐</span>
+                  <div style="flex:1;"><div style="font-size:0.88rem;font-weight:600;">Nova avaliação 5★ recebida</div><div style="font-size:0.75rem;color:var(--cinza-texto);">Por Ana Paula Souza · Há 2h</div></div>
+                  <span class="status-ativo">Ver</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="painel-card">
+              <div class="painel-card-titulo">💡 Dicas para melhorar seu perfil</div>
+              <div style="display:flex;flex-direction:column;gap:10px;">
+                <div style="display:flex;align-items:center;gap:12px;padding:12px;background:rgba(245,166,35,0.08);border-radius:var(--raio-sm);border:1px solid rgba(245,166,35,0.2);">
+                  <span style="font-size:1.4rem;">📷</span>
+                  <div><div style="font-weight:600;font-size:0.88rem;">Adicione mais fotos</div><div style="font-size:0.78rem;color:var(--cinza-texto);">Perfis com 4 fotos recebem 3x mais contatos</div></div>
+                  <button onclick="mostrarSecaoProf('fotos',document.querySelectorAll('.painel-nav-item')[2])" class="btn btn-dourado btn-sm" style="margin-left:auto;">Adicionar</button>
+                </div>
+                <div style="display:flex;align-items:center;gap:12px;padding:12px;background:rgba(232,22,60,0.05);border-radius:var(--raio-sm);border:1px solid rgba(232,22,60,0.15);">
+                  <span style="font-size:1.4rem;">📣</span>
+                  <div><div style="font-weight:600;font-size:0.88rem;">Ative um anúncio em destaque</div><div style="font-size:0.78rem;color:var(--cinza-texto);">Apareça no carrossel da homepage</div></div>
+                  <button onclick="mostrarSecaoProf('anuncios',document.querySelectorAll('.painel-nav-item')[4])" class="btn btn-primario btn-sm" style="margin-left:auto;">Contratar</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Editar perfil -->
+          <div id="secao-prof-perfil" style="display:none;">
+            <div class="painel-card">
+              <div class="painel-card-titulo">✏️ Editar Perfil</div>
+              <form onsubmit="event.preventDefault();mostrarToast('✅ Perfil atualizado!','sucesso')">
+                <div class="form-grupo"><label>Nome do negócio</label><input type="text" value="Buffet Sabor & Arte"></div>
+                <div class="form-grupo"><label>Categoria</label><select><option selected>Buffet & Gastronomia</option><option>Decoração</option><option>Foto & Vídeo</option></select></div>
+                <div class="form-grupo"><label>Descrição</label><textarea rows="5">Buffet completo para casamentos, formaturas e eventos corporativos. Mais de 15 anos de experiência e 2.000+ eventos realizados.</textarea></div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+                  <div class="form-grupo"><label>WhatsApp</label><input type="tel" value="(11) 99999-9999"></div>
+                  <div class="form-grupo"><label>Telefone</label><input type="tel" value="(11) 3000-0000"></div>
+                  <div class="form-grupo"><label>Site</label><input type="url" placeholder="https://seusite.com.br"></div>
+                  <div class="form-grupo"><label>Instagram</label><input type="text" placeholder="@seuinstagram"></div>
+                </div>
+                <button type="submit" class="btn btn-primario" style="margin-top:8px;">Salvar alterações</button>
+              </form>
+            </div>
+          </div>
+
+          <!-- Gerenciar fotos -->
+          <div id="secao-prof-fotos" style="display:none;">
+            <div class="painel-card">
+              <div class="painel-card-titulo">📷 Gerenciar Fotos (máximo 4)</div>
+              <p style="font-size:0.85rem;color:var(--cinza-texto);margin-bottom:20px;">A primeira foto é exibida nos <strong>anúncios em destaque</strong> da página inicial. As outras aparecem no seu perfil completo.</p>
+              <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;">
+                <div>
+                  <div class="foto-slot" style="border-color:var(--cor-secundaria);background:linear-gradient(135deg,rgba(245,166,35,0.1),rgba(232,22,60,0.1));">
+                    🍽️<small style="font-size:0.65rem;color:var(--cor-secundaria);font-weight:700;">PRINCIPAL ⭐</small>
+                  </div>
+                  <div style="font-size:0.72rem;text-align:center;color:var(--cor-secundaria);margin-top:4px;">Foto dos destaques</div>
+                </div>
+                <div>
+                  <div class="foto-slot">🥗<small style="font-size:0.65rem;color:var(--cinza-texto);">Foto 2</small></div>
+                </div>
+                <div>
+                  <div class="foto-slot">+<small style="font-size:0.65rem;color:var(--cinza-texto);">Adicionar</small></div>
+                </div>
+                <div>
+                  <div class="foto-slot">+<small style="font-size:0.65rem;color:var(--cinza-texto);">Adicionar</small></div>
+                </div>
+              </div>
+              <div style="margin-top:16px;padding:14px;background:rgba(245,166,35,0.08);border-radius:var(--raio-sm);font-size:0.82rem;color:var(--cinza-texto);">
+                💡 <strong>Dica:</strong> Use fotos de alta qualidade (mín. 800x600px). Mostre seus trabalhos mais bonitos para atrair mais clientes!
+              </div>
+            </div>
+          </div>
+
+          <!-- Anúncios em destaque -->
+          <div id="secao-prof-anuncios" style="display:none;">
+            <div class="painel-card">
+              <div class="painel-card-titulo">📣 Anúncios em Destaque</div>
+              <div style="background:rgba(0,200,150,0.08);border:1px solid rgba(0,200,150,0.2);border-radius:var(--raio-sm);padding:16px;margin-bottom:24px;">
+                <div style="display:flex;align-items:center;gap:10px;">
+                  <span style="font-size:1.5rem;">✅</span>
+                  <div><div style="font-weight:700;font-size:0.9rem;color:var(--cor-terciaria);">Anúncio mensal ativo até 30/04/2025</div><div style="font-size:0.78rem;color:var(--cinza-texto);">Aparecendo no carrossel da homepage · R$149 pagos</div></div>
+                </div>
+              </div>
+              <h4 style="font-weight:700;color:var(--cor-terciaria);margin-bottom:16px;">Contratar novo anúncio:</h4>
+              <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;">
+                <div class="plano-mini" onclick="mostrarToast('💳 Redirecionando para pagamento via Mercado Pago...','sucesso')">
+                  <div style="font-size:1.5rem;margin-bottom:8px;">⚡</div>
+                  <div style="font-weight:700;">Semanal</div>
+                  <div style="font-family:var(--fonte-display);font-size:1.4rem;font-weight:900;color:var(--cor-primaria);">R$49</div>
+                  <div style="font-size:0.78rem;color:var(--cinza-texto);">7 dias no carrossel</div>
+                </div>
+                <div class="plano-mini" onclick="mostrarToast('💳 Redirecionando para pagamento via Mercado Pago...','sucesso')">
+                  <div style="font-size:1.5rem;margin-bottom:8px;">📅</div>
+                  <div style="font-weight:700;">Mensal</div>
+                  <div style="font-family:var(--fonte-display);font-size:1.4rem;font-weight:900;color:var(--cor-primaria);">R$149</div>
+                  <div style="font-size:0.78rem;color:var(--cinza-texto);">30 dias em destaque</div>
+                </div>
+                <div class="plano-mini" onclick="mostrarToast('💳 Redirecionando para pagamento via Mercado Pago...','sucesso')">
+                  <div style="font-size:1.5rem;margin-bottom:8px;">🏆</div>
+                  <div style="font-weight:700;">Banner Topo</div>
+                  <div style="font-family:var(--fonte-display);font-size:1.4rem;font-weight:900;color:var(--cor-primaria);">R$249</div>
+                  <div style="font-size:0.78rem;color:var(--cinza-texto);">Banner premium da página</div>
+                </div>
+                <div class="plano-mini" onclick="mostrarToast('💳 Redirecionando para pagamento via Mercado Pago...','sucesso')">
+                  <div style="font-size:1.5rem;margin-bottom:8px;">📆</div>
+                  <div style="font-weight:700;">Quinzenal</div>
+                  <div style="font-family:var(--fonte-display);font-size:1.4rem;font-weight:900;color:var(--cor-primaria);">R$89</div>
+                  <div style="font-size:0.78rem;color:var(--cinza-texto);">15 dias em destaque</div>
+                </div>
+              </div>
+              <p style="font-size:0.78rem;color:var(--cinza-texto);margin-top:16px;">Todos os pagamentos são processados com segurança via <strong>Mercado Pago</strong>. Aceita Pix, cartão e boleto.</p>
+            </div>
+          </div>
+
+          <!-- Assinatura -->
+          <div id="secao-prof-assinatura" style="display:none;">
+            <div class="painel-card">
+              <div class="painel-card-titulo">💳 Assinatura & Pagamento</div>
+              <div class="plano-status">
+                <div>
+                  <div style="font-weight:700;font-size:0.95rem;color:var(--cor-terciaria);">Plano Premium ativo</div>
+                  <div style="font-size:0.78rem;color:var(--cinza-texto);">Próxima cobrança: 01/04/2025 · R$159,00</div>
+                </div>
+                <span class="status-ativo">Ativo</span>
+              </div>
+              <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:16px;">
+                <button onclick="mostrarToast('💳 Abrindo histórico de pagamentos...','sucesso')" class="btn btn-secundario btn-sm">Ver histórico</button>
+                <button onclick="mostrarToast('🔄 Alterando plano...','sucesso')" class="btn btn-sm" style="background:var(--cinza-claro);color:var(--cor-terciaria);">Trocar plano</button>
+                <button onclick="mostrarToast('⚠️ Você tem certeza? Seu perfil ficará inativo.','erro')" class="btn btn-sm" style="background:rgba(232,22,60,0.08);color:var(--cor-primaria);">Cancelar assinatura</button>
+              </div>
+              <div style="margin-top:24px;padding:16px;background:var(--cinza-claro);border-radius:var(--raio-sm);">
+                <div style="font-weight:700;font-size:0.9rem;color:var(--cor-terciaria);margin-bottom:12px;">Últimas transações</div>
+                <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--cinza-medio);font-size:0.85rem;"><span>Plano Premium · Março 2025</span><span style="font-weight:700;color:var(--cor-verde);">R$ 159,00 ✅</span></div>
+                <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--cinza-medio);font-size:0.85rem;"><span>Anúncio Destaque Mensal · Março 2025</span><span style="font-weight:700;color:var(--cor-verde);">R$ 149,00 ✅</span></div>
+                <div style="display:flex;justify-content:space-between;padding:8px 0;font-size:0.85rem;"><span>Plano Premium · Fevereiro 2025</span><span style="font-weight:700;color:var(--cor-verde);">R$ 159,00 ✅</span></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Mapa localização -->
+          <div id="secao-prof-mapa" style="display:none;">
+            <div class="painel-card">
+              <div class="painel-card-titulo">📍 Minha Localização</div>
+              <p style="font-size:0.85rem;color:var(--cinza-texto);margin-bottom:16px;">Seu endereço aparece no mapa do seu perfil público, facilitando que clientes próximos a você entrem em contato.</p>
+              <div id="mapa-profissional" style="height:300px;border-radius:var(--raio-sm);overflow:hidden;margin-bottom:16px;"></div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                <div class="form-grupo"><label>CEP</label><input type="text" value="01310-100"></div>
+                <div class="form-grupo"><label>Cidade</label><input type="text" value="São Paulo"></div>
+                <div class="form-grupo"><label>Bairro</label><input type="text" value="Bela Vista"></div>
+                <div class="form-grupo"><label>Estado</label><input type="text" value="SP"></div>
+              </div>
+              <div class="form-grupo"><label>Endereço completo</label><input type="text" value="Av. Paulista, 1000"></div>
+              <button onclick="mostrarToast('📍 Localização atualizada no mapa!','sucesso')" class="btn btn-primario" style="margin-top:8px;">Atualizar localização</button>
+            </div>
+          </div>
+
+          <!-- Avaliações recebidas -->
+          <div id="secao-prof-avaliacoes" style="display:none;">
+            <div class="painel-card">
+              <div class="painel-card-titulo">⭐ Avaliações Recebidas (247)</div>
+              <div style="display:flex;align-items:center;gap:24px;padding-bottom:20px;border-bottom:2px solid var(--cinza-medio);margin-bottom:20px;">
+                <div style="text-align:center;"><div style="font-family:var(--fonte-display);font-size:3.5rem;font-weight:900;color:var(--cor-terciaria);">4.9</div><div style="color:var(--cor-secundaria);">★★★★★</div><div style="font-size:0.78rem;color:var(--cinza-texto);">247 avaliações</div></div>
+                <div style="flex:1;">
+                  <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;"><span style="font-size:0.8rem;width:12px;">5</span><div style="flex:1;height:6px;background:var(--cinza-medio);border-radius:3px;overflow:hidden;"><div style="width:82%;height:100%;background:var(--cor-secundaria);border-radius:3px;"></div></div><span style="font-size:0.78rem;color:var(--cinza-texto);">82%</span></div>
+                  <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;"><span style="font-size:0.8rem;width:12px;">4</span><div style="flex:1;height:6px;background:var(--cinza-medio);border-radius:3px;overflow:hidden;"><div style="width:13%;height:100%;background:var(--cor-secundaria);border-radius:3px;"></div></div><span style="font-size:0.78rem;color:var(--cinza-texto);">13%</span></div>
+                  <div style="display:flex;align-items:center;gap:8px;"><span style="font-size:0.8rem;width:12px;">3</span><div style="flex:1;height:6px;background:var(--cinza-medio);border-radius:3px;overflow:hidden;"><div style="width:5%;height:100%;background:var(--cor-secundaria);border-radius:3px;"></div></div><span style="font-size:0.78rem;color:var(--cinza-texto);">5%</span></div>
+                </div>
+              </div>
+              <div style="padding:14px 0;border-bottom:1px solid var(--cinza-medio);">
+                <div style="display:flex;justify-content:space-between;margin-bottom:6px;"><div style="display:flex;align-items:center;gap:8px;"><div style="width:32px;height:32px;background:var(--grad-rosa);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.9rem;">👰</div><div style="font-weight:600;font-size:0.88rem;">Ana Paula Souza</div></div><span style="color:var(--cor-secundaria);font-size:0.85rem;">★★★★★</span></div>
+                <p style="font-size:0.85rem;color:var(--cinza-texto);line-height:1.6;">Simplesmente perfeito! Todos os convidados do meu casamento não paravam de elogiar a comida.</p>
+              </div>
+              <div style="padding:14px 0;">
+                <div style="display:flex;justify-content:space-between;margin-bottom:6px;"><div style="display:flex;align-items:center;gap:8px;"><div style="width:32px;height:32px;background:linear-gradient(135deg,#F5A623,#E8163C);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.9rem;">🎓</div><div style="font-weight:600;font-size:0.88rem;">Carlos Mendes</div></div><span style="color:var(--cor-secundaria);font-size:0.85rem;">★★★★★</span></div>
+                <p style="font-size:0.85rem;color:var(--cinza-texto);line-height:1.6;">Contratei para a formatura da turma e foi incrível. Buffet farto e apresentação impecável!</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div class="toast" id="toast"></div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="../js/main.js"></script>
+<script>
+function mostrarSecaoProf(id, el) {
+  document.querySelectorAll('[id^="secao-prof-"]').forEach(s => s.style.display = 'none');
+  const target = document.getElementById('secao-prof-' + id);
+  if (target) target.style.display = 'block';
+  document.querySelectorAll('.painel-nav-item').forEach(n => n.classList.remove('ativo'));
+  if (el) el.classList.add('ativo');
+
+  if (id === 'mapa') {
+    setTimeout(() => {
+      const mapa = L.map('mapa-profissional', { zoomControl: true }).setView([-23.561414, -46.655881], 14);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(mapa);
+      L.marker([-23.561414, -46.655881]).addTo(mapa).bindPopup('<b>Buffet Sabor & Arte</b>').openPopup();
+    }, 100);
+  }
+}
+// Style plano-mini used here
+document.querySelectorAll('.plano-mini').forEach(el => {
+  el.style.background = 'var(--cinza-claro)';
+  el.style.borderRadius = 'var(--raio-sm)';
+  el.style.padding = '20px';
+  el.style.cursor = 'pointer';
+  el.style.transition = 'var(--transicao)';
+  el.style.border = '2px solid var(--cinza-medio)';
+});
+</script>
+</body>
+</html>

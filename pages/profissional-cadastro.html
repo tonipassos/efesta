@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Anunciar no É Festa — Cadastro Profissional</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .cadastro-page { padding-top: 80px; min-height: 100vh; background: var(--cinza-claro); }
+    .cadastro-hero {
+      background: var(--grad-hero);
+      padding: 60px 0;
+      text-align: center;
+      color: white;
+    }
+    .cadastro-body { padding: 48px 0; }
+    .cadastro-grid {
+      display: grid;
+      grid-template-columns: 1fr 400px;
+      gap: 40px;
+      align-items: start;
+    }
+    .form-section {
+      background: white;
+      border-radius: var(--raio);
+      padding: 32px;
+      box-shadow: var(--sombra-card);
+      margin-bottom: 24px;
+    }
+    .form-section-titulo {
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: var(--cor-terciaria);
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding-bottom: 16px;
+      border-bottom: 2px solid var(--cinza-medio);
+    }
+    .form-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .foto-upload-area {
+      border: 2px dashed var(--cinza-medio);
+      border-radius: var(--raio);
+      padding: 32px;
+      text-align: center;
+      cursor: pointer;
+      transition: var(--transicao);
+    }
+    .foto-upload-area:hover { border-color: var(--cor-primaria); background: rgba(232,22,60,0.02); }
+    .fotos-preview { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; margin-top: 16px; }
+    .foto-slot {
+      aspect-ratio: 1;
+      border: 2px dashed var(--cinza-medio);
+      border-radius: var(--raio-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      cursor: pointer;
+      transition: var(--transicao);
+      background: var(--cinza-claro);
+    }
+    .foto-slot:hover { border-color: var(--cor-primaria); }
+    .plano-mini {
+      border: 2px solid var(--cinza-medio);
+      border-radius: var(--raio);
+      padding: 16px;
+      cursor: pointer;
+      transition: var(--transicao);
+      margin-bottom: 12px;
+    }
+    .plano-mini:hover, .plano-mini.selecionado { border-color: var(--cor-primaria); background: rgba(232,22,60,0.03); }
+    .plano-mini-header { display: flex; align-items: center; justify-content: space-between; }
+    .plano-mini-nome { font-weight: 700; font-size: 0.95rem; }
+    .plano-mini-preco { font-family: var(--fonte-display); font-size: 1.4rem; font-weight: 900; color: var(--cor-primaria); }
+    .sidebar-sticky { position: sticky; top: 100px; }
+    .beneficios { display: flex; flex-direction: column; gap: 10px; }
+    .beneficio { display: flex; align-items: center; gap: 10px; font-size: 0.88rem; }
+    .beneficio .b-icon { width: 28px; height: 28px; background: rgba(0,200,150,0.1); color: var(--cor-verde); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; flex-shrink: 0; }
+    @media(max-width:768px){ .cadastro-grid { grid-template-columns: 1fr; } .form-2col { grid-template-columns: 1fr; } .sidebar-sticky { position: static; } }
+  </style>
+</head>
+<body>
+<header class="header scrolled"><div class="container header-inner">
+  <a href="../index.html" class="logo"><div class="logo-icon">🎉</div><span class="logo-texto">É <span>Festa</span></span></a>
+  <span style="color:rgba(255,255,255,0.6);font-size:0.88rem;">Cadastro de Profissional</span>
+</div></header>
+
+<div class="cadastro-page">
+  <section class="cadastro-hero">
+    <div class="badge" style="background:rgba(245,166,35,0.15);color:var(--cor-secundaria);border-color:rgba(245,166,35,0.3);display:inline-flex;justify-content:center;margin-bottom:16px;">🏢 Para profissionais e empresas</div>
+    <h1 style="font-family:var(--fonte-display);font-size:2.8rem;font-weight:900;margin-bottom:12px;">Anuncie no É Festa</h1>
+    <p style="color:rgba(255,255,255,0.75);max-width:520px;margin:0 auto;font-size:1.05rem;">Alcance milhares de clientes que buscam exatamente o que você oferece. Cadastre-se em minutos.</p>
+    <div style="display:flex;justify-content:center;gap:32px;margin-top:32px;flex-wrap:wrap;">
+      <div style="text-align:center;"><div style="font-family:var(--fonte-display);font-size:2rem;font-weight:900;color:var(--cor-secundaria);">+28K</div><div style="font-size:0.82rem;color:rgba(255,255,255,0.6);">Usuários ativos</div></div>
+      <div style="text-align:center;"><div style="font-family:var(--fonte-display);font-size:2rem;font-weight:900;color:var(--cor-secundaria);">+150</div><div style="font-size:0.82rem;color:rgba(255,255,255,0.6);">Cidades</div></div>
+      <div style="text-align:center;"><div style="font-family:var(--fonte-display);font-size:2rem;font-weight:900;color:var(--cor-secundaria);">Sem</div><div style="font-size:0.82rem;color:rgba(255,255,255,0.6);">Fidelidade</div></div>
+    </div>
+  </section>
+
+  <section class="cadastro-body">
+    <div class="container">
+      <div class="cadastro-grid">
+        <!-- FORMULÁRIO -->
+        <div>
+          <form onsubmit="enviarCadastro(event)">
+            <!-- Dados básicos -->
+            <div class="form-section">
+              <div class="form-section-titulo">👤 Dados do Responsável</div>
+              <div class="form-2col">
+                <div class="form-grupo"><label>Nome completo *</label><input type="text" placeholder="Seu nome completo" required></div>
+                <div class="form-grupo"><label>CPF *</label><input type="text" placeholder="000.000.000-00" required></div>
+              </div>
+              <div class="form-2col">
+                <div class="form-grupo"><label>E-mail *</label><input type="email" placeholder="email@empresa.com" required></div>
+                <div class="form-grupo"><label>WhatsApp *</label><input type="tel" placeholder="(11) 99999-9999" required></div>
+              </div>
+              <div class="form-grupo"><label>Senha *</label><input type="password" placeholder="Mínimo 8 caracteres" required minlength="8"></div>
+            </div>
+
+            <!-- Dados da empresa -->
+            <div class="form-section">
+              <div class="form-section-titulo">🏢 Dados da Empresa / Profissional</div>
+              <div class="form-grupo"><label>Nome do negócio / Marca *</label><input type="text" placeholder="Ex: Buffet Sabor & Arte" required></div>
+              <div class="form-2col">
+                <div class="form-grupo"><label>CNPJ (ou CPF se autônomo)</label><input type="text" placeholder="00.000.000/0001-00"></div>
+                <div class="form-grupo">
+                  <label>Categoria principal *</label>
+                  <select required>
+                    <option value="">Selecione...</option>
+                    <option>Buffet & Gastronomia</option>
+                    <option>Decoração</option>
+                    <option>Fotografia & Vídeo</option>
+                    <option>DJ & Música</option>
+                    <option>Salão de Festas</option>
+                    <option>Casamentos (pacote completo)</option>
+                    <option>Formaturas</option>
+                    <option>Bolos & Confeitaria</option>
+                    <option>Floricultura</option>
+                    <option>Iluminação & Sonorização</option>
+                    <option>Locação de Itens</option>
+                    <option>Estruturas para Eventos</option>
+                    <option>Shows & Entretenimento</option>
+                    <option>Ingressos & Ticketing</option>
+                    <option>Animação & Recreação</option>
+                    <option>Transporte para Eventos</option>
+                    <option>Segurança</option>
+                    <option>Convites & Papelaria</option>
+                    <option>Open Bar & Drinks</option>
+                    <option>Cerimonialista</option>
+                    <option>Mestre de Cerimônias</option>
+                    <option>Assessoria de Eventos</option>
+                    <option>Fotocabine / Totem</option>
+                    <option>Outro</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-grupo"><label>Descrição do negócio *</label><textarea placeholder="Descreva seus serviços, diferenciais, experiência..." rows="4" required></textarea></div>
+            </div>
+
+            <!-- Endereço -->
+            <div class="form-section">
+              <div class="form-section-titulo">📍 Endereço (para geolocalização)</div>
+              <div class="form-2col">
+                <div class="form-grupo"><label>CEP *</label><input type="text" placeholder="00000-000" required></div>
+                <div class="form-grupo"><label>Estado *</label><select required><option value="">UF</option><option>SP</option><option>RJ</option><option>MG</option><option>RS</option><option>PR</option><option>SC</option><option>BA</option><option>GO</option><option>DF</option><option>PE</option><option>CE</option><option>AM</option><option>Outros</option></select></div>
+              </div>
+              <div class="form-2col">
+                <div class="form-grupo"><label>Cidade *</label><input type="text" placeholder="Sua cidade" required></div>
+                <div class="form-grupo"><label>Bairro</label><input type="text" placeholder="Bairro"></div>
+              </div>
+              <div class="form-grupo"><label>Endereço completo</label><input type="text" placeholder="Rua, número, complemento"></div>
+            </div>
+
+            <!-- Fotos -->
+            <div class="form-section">
+              <div class="form-section-titulo">📷 Fotos do Perfil (máximo 4)</div>
+              <p style="font-size:0.85rem;color:var(--cinza-texto);margin-bottom:16px;">Adicione até 4 fotos dos seus serviços. A 1ª foto será usada nos anúncios em destaque na página inicial.</p>
+              <div class="fotos-preview">
+                <div class="foto-slot" title="Foto principal (aparece nos destaques)">📸<br><small style="font-size:0.6rem;display:block;margin-top:4px;">Principal</small></div>
+                <div class="foto-slot">+</div>
+                <div class="foto-slot">+</div>
+                <div class="foto-slot">+</div>
+              </div>
+              <p style="font-size:0.75rem;color:var(--cinza-texto);margin-top:10px;">Formatos: JPG, PNG. Máximo 5MB cada. Recomendado: 800x600px.</p>
+            </div>
+
+            <!-- Plano -->
+            <div class="form-section">
+              <div class="form-section-titulo">💳 Escolha seu Plano</div>
+              <div class="plano-mini selecionado" onclick="document.querySelectorAll('.plano-mini').forEach(p=>p.classList.remove('selecionado'));this.classList.add('selecionado')">
+                <div class="plano-mini-header">
+                  <div>
+                    <div class="plano-mini-nome">Plano Profissional</div>
+                    <div style="font-size:0.78rem;color:var(--cinza-texto);">Ideal para quem está começando</div>
+                  </div>
+                  <div class="plano-mini-preco">R$ 89<span style="font-size:0.9rem;font-weight:400;">/mês</span></div>
+                </div>
+              </div>
+              <div class="plano-mini" onclick="document.querySelectorAll('.plano-mini').forEach(p=>p.classList.remove('selecionado'));this.classList.add('selecionado')">
+                <div class="plano-mini-header">
+                  <div>
+                    <div class="plano-mini-nome">Plano Premium <span style="background:var(--grad-dourado);color:var(--preto-suave);font-size:0.7rem;padding:2px 8px;border-radius:100px;font-weight:700;">RECOMENDADO</span></div>
+                    <div style="font-size:0.78rem;color:var(--cinza-texto);">Mais visibilidade e posição privilegiada</div>
+                  </div>
+                  <div class="plano-mini-preco">R$ 159<span style="font-size:0.9rem;font-weight:400;">/mês</span></div>
+                </div>
+              </div>
+              <p style="font-size:0.78rem;color:var(--cinza-texto);margin-top:8px;">Sem fidelidade · Cancele quando quiser · Cobrado via Mercado Pago</p>
+
+              <div style="margin-top:24px;padding:16px;background:rgba(245,166,35,0.08);border-radius:var(--raio-sm);border:1px solid rgba(245,166,35,0.2);">
+                <div style="font-weight:700;font-size:0.9rem;color:var(--cor-terciaria);margin-bottom:4px;">💛 Adicionar Anúncio em Destaque?</div>
+                <div style="font-size:0.82rem;color:var(--cinza-texto);margin-bottom:12px;">Apareça no carrossel da página inicial com link para seu perfil.</div>
+                <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;">
+                  <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:0.82rem;"><input type="checkbox"> Semanal (R$49)</label>
+                  <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:0.82rem;"><input type="checkbox"> Quinzenal (R$89)</label>
+                  <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:0.82rem;"><input type="checkbox"> Mensal (R$149)</label>
+                  <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:0.82rem;"><input type="checkbox"> Banner topo (R$249)</label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Concordar -->
+            <div style="margin-bottom:24px;">
+              <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;font-size:0.88rem;color:var(--cinza-texto);">
+                <input type="checkbox" required style="margin-top:3px;flex-shrink:0;">
+                Concordo com os <a href="termos.html" style="color:var(--cor-primaria);">Termos de Uso</a> e a <a href="privacidade.html" style="color:var(--cor-primaria);">Política de Privacidade</a> do É Festa.
+              </label>
+            </div>
+
+            <button type="submit" class="btn btn-primario btn-lg" style="width:100%;justify-content:center;">🎉 Criar conta e começar a anunciar</button>
+          </form>
+        </div>
+
+        <!-- SIDEBAR -->
+        <div class="sidebar-sticky">
+          <div style="background:var(--cor-terciaria);border-radius:var(--raio);padding:28px;color:white;margin-bottom:24px;">
+            <div style="font-family:var(--fonte-display);font-size:1.3rem;font-weight:900;margin-bottom:16px;">Por que anunciar no É Festa?</div>
+            <div class="beneficios">
+              <div class="beneficio"><div class="b-icon">✓</div><span>+28.000 usuários buscando fornecedores ativamente</span></div>
+              <div class="beneficio"><div class="b-icon">✓</div><span>Perfil com 4 fotos e mapa de geolocalização</span></div>
+              <div class="beneficio"><div class="b-icon">✓</div><span>Anúncios em destaque no carrossel da homepage</span></div>
+              <div class="beneficio"><div class="b-icon">✓</div><span>Painel completo com métricas e acompanhamento</span></div>
+              <div class="beneficio"><div class="b-icon">✓</div><span>Sem fidelidade — cancele quando quiser</span></div>
+              <div class="beneficio"><div class="b-icon">✓</div><span>Suporte dedicado para anunciantes</span></div>
+              <div class="beneficio"><div class="b-icon">✓</div><span>Sistema de avaliações para construir reputação</span></div>
+            </div>
+          </div>
+
+          <div style="background:white;border-radius:var(--raio);padding:24px;box-shadow:var(--sombra-card);">
+            <div style="font-weight:700;color:var(--cor-terciaria);margin-bottom:16px;">💬 O que dizem quem já anuncia</div>
+            <div style="font-size:0.88rem;color:var(--cinza-texto);font-style:italic;line-height:1.7;margin-bottom:12px;">"Em 3 meses de plataforma, meus agendamentos triplicaram. O retorno é muito acima do que esperava!"</div>
+            <div style="display:flex;align-items:center;gap:10px;">
+              <div style="width:36px;height:36px;background:var(--grad-rosa);border-radius:50%;display:flex;align-items:center;justify-content:center;">👨‍🍳</div>
+              <div><div style="font-weight:600;font-size:0.85rem;">Ricardo Almeida</div><div style="font-size:0.75rem;color:var(--cinza-texto);">Buffet Premium, São Paulo</div></div>
+            </div>
+          </div>
+
+          <div style="background:rgba(0,200,150,0.08);border:1px solid rgba(0,200,150,0.2);border-radius:var(--raio);padding:16px;margin-top:16px;text-align:center;">
+            <div style="font-size:1.5rem;margin-bottom:6px;">💳</div>
+            <div style="font-size:0.85rem;font-weight:700;color:var(--cor-terciaria);">Pagamento 100% seguro</div>
+            <div style="font-size:0.78rem;color:var(--cinza-texto);margin-top:4px;">Processado via Mercado Pago. Aceitamos Pix, cartão e boleto.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div class="toast" id="toast"></div>
+<script src="../js/main.js"></script>
+<script>
+function enviarCadastro(e) {
+  e.preventDefault();
+  mostrarToast('🎉 Cadastro enviado! Aguarde a aprovação em até 24h.', 'sucesso');
+  setTimeout(() => window.location.href = '../index.html', 3000);
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="É Festa — O maior marketplace de festas e eventos do Brasil. Encontre fornecedores de casamentos, formaturas, shows, buffets, salões e muito mais.">
+  <meta name="keywords" content="festa, casamento, formatura, buffet, salão de festas, decoração, DJ, fotografia, eventos Brasil">
+  <meta property="og:title" content="É Festa — Seu evento começa aqui">
+  <meta property="og:description" content="Encontre os melhores fornecedores de festas e eventos do Brasil.">
+  <meta property="og:type" content="website">
+  <title>É Festa — Seu evento começa aqui 🎉</title>
+  <link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/style.css">
+  <!-- Leaflet para mapas -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+</head>
+<body>
+
+<!-- ============ HEADER ============ -->
+<header class="header" id="header">
+  <div class="container header-inner">
+    <a href="index.html" class="logo">
+      <div class="logo-icon">🎉</div>
+      <span class="logo-texto">É <span>Festa</span></span>
+    </a>
+
+    <nav class="nav-links">
+      <a href="#categorias">Categorias</a>
+      <a href="#destaques">Destaques</a>
+      <a href="pages/como-funciona.html">Como Funciona</a>
+      <a href="pages/planos.html">Planos</a>
+      <a href="pages/busca.html">Buscar</a>
+    </nav>
+
+    <div class="nav-acoes">
+      <a href="#" class="btn-login-nav nav-links" data-modal="modal-login">Entrar</a>
+      <a href="#" class="btn btn-primario btn-sm" data-modal="modal-cadastro">Cadastrar-se</a>
+      <a href="pages/profissional-cadastro.html" class="btn btn-dourado btn-sm">Anunciar</a>
+    </div>
+
+    <button class="menu-mobile" id="menu-toggle" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+
+  <!-- Nav Mobile -->
+  <div id="nav-mobile" style="display:none;">
+    <div style="background:var(--cor-terciaria);padding:24px;display:flex;flex-direction:column;gap:16px;">
+      <a href="#categorias" style="color:white;font-weight:600;">Categorias</a>
+      <a href="#destaques" style="color:white;font-weight:600;">Destaques</a>
+      <a href="pages/como-funciona.html" style="color:white;font-weight:600;">Como Funciona</a>
+      <a href="pages/planos.html" style="color:white;font-weight:600;">Planos</a>
+      <hr style="border-color:rgba(255,255,255,0.1);">
+      <a href="#" data-modal="modal-login" class="btn btn-secundario btn-sm" style="border-color:white;color:white;">Entrar</a>
+      <a href="#" data-modal="modal-cadastro" class="btn btn-primario btn-sm">Cadastrar-se</a>
+      <a href="pages/profissional-cadastro.html" class="btn btn-dourado btn-sm">Anunciar minha empresa</a>
+    </div>
+  </div>
+</header>
+
+<!-- ============ HERO ============ -->
+<section class="hero">
+  <div class="hero-confetti" id="confeti-container"></div>
+  <div class="container">
+    <div class="hero-conteudo">
+      <div class="hero-texto">
+        <div class="badge">🎊 +5.000 fornecedores cadastrados</div>
+        <h1 class="hero-titulo">
+          O seu evento<br>
+          começa no <span class="destaque">É Festa</span>
+        </h1>
+        <p class="hero-subtitulo">
+          Do casamento dos sonhos à festa de formatura inesquecível. Conectamos você aos melhores fornecedores de festas e eventos do Brasil.
+        </p>
+
+        <form class="busca-principal" onsubmit="buscarServicos(event)">
+          <span style="font-size:1.2rem;">🔍</span>
+          <input type="text" id="busca-input" placeholder="O que você precisa? Ex: DJ, buffet, decoração..." />
+          <input type="text" id="busca-local" placeholder="Cidade" style="max-width:140px;" />
+          <button type="submit" class="btn btn-primario btn-sm">Buscar</button>
+        </form>
+
+        <div style="margin-top:16px;display:flex;align-items:center;gap:8px;">
+          <button onclick="buscarProximos()" style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:white;padding:8px 16px;border-radius:100px;font-size:0.82rem;cursor:pointer;font-family:var(--fonte-corpo);">
+            📍 Perto de mim
+          </button>
+          <span style="color:rgba(255,255,255,0.4);font-size:0.8rem;">ou pesquise por categoria abaixo</span>
+        </div>
+
+        <div class="hero-stats" style="margin-top:40px;">
+          <div class="hero-stat">
+            <div class="hero-stat-num">+5K</div>
+            <div class="hero-stat-label">Fornecedores</div>
+          </div>
+          <div class="hero-stat">
+            <div class="hero-stat-num">+28K</div>
+            <div class="hero-stat-label">Usuários</div>
+          </div>
+          <div class="hero-stat">
+            <div class="hero-stat-num">+150</div>
+            <div class="hero-stat-label">Cidades</div>
+          </div>
+          <div class="hero-stat">
+            <div class="hero-stat-num">4.9★</div>
+            <div class="hero-stat-label">Avaliação</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-visual">
+        <div class="hero-cards-flutuantes">
+          <div class="card-flutuante">
+            <div class="cf-emoji">💒</div>
+            <div class="cf-titulo">Casamento dos Sonhos</div>
+            <div class="cf-sub">Buffet + Decoração + Foto</div>
+            <div class="cf-valor">A partir de R$2.500</div>
+          </div>
+          <div class="card-flutuante">
+            <div class="cf-emoji">🎓</div>
+            <div class="cf-titulo">Formatura Incrível</div>
+            <div class="cf-sub">Salão + DJ + Iluminação</div>
+            <div class="cf-valor">Solicitar orçamento</div>
+          </div>
+          <div class="card-flutuante">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+              <div style="width:36px;height:36px;background:var(--grad-rosa);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;">🎂</div>
+              <div>
+                <div class="cf-titulo">Buffet Premium</div>
+                <div class="cf-sub" style="color:var(--cor-secundaria);">★★★★★ (128 avaliações)</div>
+              </div>
+            </div>
+            <div style="font-size:0.78rem;opacity:0.7;">São Paulo, SP • Disponível</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CATEGORIAS ============ -->
+<section class="secao" id="categorias">
+  <div class="container">
+    <div style="text-align:center;margin-bottom:0;">
+      <div class="badge" style="justify-content:center;">Segmentos</div>
+      <h2 class="titulo-secao" style="text-align:center;">Tudo para o seu <span>evento</span></h2>
+      <p class="subtitulo-secao" style="margin:0 auto 40px;text-align:center;">Explore todas as categorias de fornecedores disponíveis na plataforma</p>
+    </div>
+
+    <div class="categorias-grid" id="categorias-grid">
+      <div class="categoria-card ativo" data-cat="todos" onclick="filtrarAnuncios('todos');document.querySelectorAll('.categoria-card').forEach(c=>c.classList.remove('ativo'));this.classList.add('ativo')">
+        <div class="cat-emoji">🎉</div>
+        <div class="cat-nome">Todos</div>
+        <div class="cat-qtd">5.200+ serviços</div>
+      </div>
+      <div class="categoria-card" data-cat="casamento" onclick="filtrarAnuncios('casamento');document.querySelectorAll('.categoria-card').forEach(c=>c.classList.remove('ativo'));this.classList.add('ativo')">
+        <div class="cat-emoji">💒</div>
+        <div class="cat-nome">Casamentos</div>
+        <div class="cat-qtd">820 fornecedores</div>
+      </div>
+      <div class="categoria-card" data-cat="formatura" onclick="filtrarAnuncios('formatura');document.querySelectorAll('.categoria-card').forEach(c=>c.classList.remove('ativo'));this.classList.add('ativo')">
+        <div class="cat-emoji">🎓</div>
+        <div class="cat-nome">Formatura</div>
+        <div class="cat-qtd">410 fornecedores</div>
+      </div>
+      <div class="categoria-card" data-cat="buffet" onclick="filtrarAnuncios('buffet');document.querySelectorAll('.categoria-card').forEach(c=>c.classList.remove('ativo'));this.classList.add('ativo')">
+        <div class="cat-emoji">🍽️</div>
+        <div class="cat-nome">Buffet</div>
+        <div class="cat-qtd">680 fornecedores</div>
+      </div>
+      <div class="categoria-card" data-cat="salao" onclick="filtrarAnuncios('salao');document.querySelectorAll('.categoria-card').forEach(c=>c.classList.remove('ativo'));this.classList.add('ativo')">
+        <div class="cat-emoji">🏛️</div>
+        <div class="cat-nome">Salões de Festa</div>
+        <div class="cat-qtd">530 fornecedores</div>
+      </div>
+      <div class="categoria-card" data-cat="decoracao" onclick="filtrarAnuncios('decoracao');document.querySelectorAll('.categoria-card').forEach(c=>c.classList.remove('ativo'));this.classList.add('ativo')">
+        <div class="cat-emoji">🌸</div>
+        <div class="cat-nome">Decoração</div>
+        <div class="cat-qtd">720 fornecedores</div>
+      </div>
+      <div class="categoria-card" data-cat="foto-video" onclick="filtrarAnuncios('foto-video');document.querySelectorAll('.categoria-card').forEach(c=>c.classList.remove('ativo'));this.classList.add('ativo')">
+        <div class="cat-emoji">📸</div>
+        <div class="cat-nome">Foto & Vídeo</div>
+        <div class="cat-qtd">490 fornecedores</div>
+      </div>
+      <div class="categoria-card" data-cat="musica" onclick="filtrarAnuncios('musica');document.querySelectorAll('.categoria-card').forEach(c=>c.classList.remove('ativo'));this.classList.add('ativo')">
+        <div class="cat-emoji">🎵</div>
+        <div class="cat-nome">DJ & Música</div>
+        <div class="cat-qtd">360 fornecedores</div>
+      </div>
+      <div class="categoria-card" data-cat="ingressos" onclick="filtrarAnuncios('ingressos');document.querySelectorAll('.categoria-card').forEach(c=>c.classList.remove('ativo'));this.classList.add('ativo')">
+        <div class="cat-emoji">🎟️</div>
+        <div class="cat-nome">Shows & Ingressos</div>
+        <div class="cat-qtd">290 fornecedores</div>
+      </div>
+      <div class="categoria-card" data-cat="estrutura" onclick="filtrarAnuncios('estrutura');document.querySelectorAll('.categoria-card').forEach(c=>c.classList.remove('ativo'));this.classList.add('ativo')">
+        <div class="cat-emoji">⛺</div>
+        <div class="cat-nome">Estrutura</div>
+        <div class="cat-qtd">310 fornecedores</div>
+      </div>
+      <div class="categoria-card" data-cat="locacao" onclick="filtrarAnuncios('locacao');document.querySelectorAll('.categoria-card').forEach(c=>c.classList.remove('ativo'));this.classList.add('ativo')">
+        <div class="cat-emoji">🛋️</div>
+        <div class="cat-nome">Locação de Itens</div>
+        <div class="cat-qtd">450 fornecedores</div>
+      </div>
+      <div class="categoria-card" data-cat="iluminacao" onclick="filtrarAnuncios('iluminacao');document.querySelectorAll('.categoria-card').forEach(c=>c.classList.remove('ativo'));this.classList.add('ativo')">
+        <div class="cat-emoji">💡</div>
+        <div class="cat-nome">Iluminação</div>
+        <div class="cat-qtd">280 fornecedores</div>
+      </div>
+      <div class="categoria-card" data-cat="doces" onclick="filtrarAnuncios('doces');document.querySelectorAll('.categoria-card').forEach(c=>c.classList.remove('ativo'));this.classList.add('ativo')">
+        <div class="cat-emoji">🎂</div>
+        <div class="cat-nome">Bolos & Doces</div>
+        <div class="cat-qtd">560 fornecedores</div>
+      </div>
+      <div class="categoria-card" data-cat="seguranca" onclick="filtrarAnuncios('seguranca');document.querySelectorAll('.categoria-card').forEach(c=>c.classList.remove('ativo'));this.classList.add('ativo')">
+        <div class="cat-emoji">🔐</div>
+        <div class="cat-nome">Segurança</div>
+        <div class="cat-qtd">120 fornecedores</div>
+      </div>
+      <div class="categoria-card" data-cat="convites" onclick="filtrarAnuncios('convites');document.querySelectorAll('.categoria-card').forEach(c=>c.classList.remove('ativo'));this.classList.add('ativo')">
+        <div class="cat-emoji">✉️</div>
+        <div class="cat-nome">Convites</div>
+        <div class="cat-qtd">230 fornecedores</div>
+      </div>
+      <div class="categoria-card" data-cat="transporte" onclick="filtrarAnuncios('transporte');document.querySelectorAll('.categoria-card').forEach(c=>c.classList.remove('ativo'));this.classList.add('ativo')">
+        <div class="cat-emoji">🚌</div>
+        <div class="cat-nome">Transporte</div>
+        <div class="cat-qtd">180 fornecedores</div>
+      </div>
+      <div class="categoria-card" data-cat="animacao" onclick="filtrarAnuncios('animacao');document.querySelectorAll('.categoria-card').forEach(c=>c.classList.remove('ativo'));this.classList.add('ativo')">
+        <div class="cat-emoji">🎭</div>
+        <div class="cat-nome">Animação</div>
+        <div class="cat-qtd">210 fornecedores</div>
+      </div>
+      <div class="categoria-card" data-cat="floricultura" onclick="filtrarAnuncios('floricultura');document.querySelectorAll('.categoria-card').forEach(c=>c.classList.remove('ativo'));this.classList.add('ativo')">
+        <div class="cat-emoji">💐</div>
+        <div class="cat-nome">Floricultura</div>
+        <div class="cat-qtd">340 fornecedores</div>
+      </div>
+      <div class="categoria-card" data-cat="cerimonia" onclick="filtrarAnuncios('cerimonia');document.querySelectorAll('.categoria-card').forEach(c=>c.classList.remove('ativo'));this.classList.add('ativo')">
+        <div class="cat-emoji">⛪</div>
+        <div class="cat-nome">Cerimônia & Liturgia</div>
+        <div class="cat-qtd">95 fornecedores</div>
+      </div>
+      <div class="categoria-card" data-cat="conveniencia" onclick="filtrarAnuncios('conveniencia');document.querySelectorAll('.categoria-card').forEach(c=>c.classList.remove('ativo'));this.classList.add('ativo')">
+        <div class="cat-emoji">🍹</div>
+        <div class="cat-nome">Open Bar & Drinks</div>
+        <div class="cat-qtd">270 fornecedores</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ DESTAQUES CARROSSEL ============ -->
+<section class="secao destaques" id="destaques">
+  <div class="container">
+    <div class="carrossel-header">
+      <div>
+        <div class="badge">⭐ Em Destaque</div>
+        <h2 class="titulo-secao">Fornecedores em <span>Destaque</span></h2>
+        <p class="subtitulo-secao">Os profissionais mais bem avaliados e recomendados da plataforma</p>
+      </div>
+      <div class="carrossel-controls">
+        <button class="ctrl-btn ctrl-prev" aria-label="Anterior">&#8592;</button>
+        <button class="ctrl-btn ctrl-next" aria-label="Próximo">&#8594;</button>
+      </div>
+    </div>
+    <div class="carrossel-wrapper">
+      <div class="carrossel-track" id="carrossel-destaques">
+
+        <!-- Card 1 -->
+        <div class="anuncio-card" data-cat="buffet">
+          <a href="pages/perfil-profissional.html?id=1">
+            <div class="anuncio-img" style="background:linear-gradient(135deg,#1A0A2E,#E8163C);">
+              <div class="anuncio-badge-destaque">⭐ DESTAQUE</div>
+              <div class="anuncio-cat-badge">🍽️ Buffet</div>
+              <div style="display:flex;align-items:center;justify-content:center;height:100%;font-size:4rem;">🍽️</div>
+            </div>
+            <div class="anuncio-corpo">
+              <div class="anuncio-nome">Buffet Sabor & Arte</div>
+              <div class="anuncio-cat">Buffet completo para eventos</div>
+              <div class="anuncio-info">
+                <div class="anuncio-avaliacao">⭐ 4.9 <span style="color:var(--cinza-texto);font-weight:400;">(247)</span></div>
+                <div class="anuncio-local">📍 São Paulo, SP</div>
+              </div>
+              <div class="anuncio-preco" style="margin-top:8px;">A partir de R$ 89/pessoa</div>
+              <div class="anuncio-ver-perfil">Ver perfil completo →</div>
+            </div>
+          </a>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="anuncio-card" data-cat="decoracao">
+          <a href="pages/perfil-profissional.html?id=2">
+            <div class="anuncio-img" style="background:linear-gradient(135deg,#FF6B9D,#F5A623);">
+              <div class="anuncio-badge-destaque">⭐ DESTAQUE</div>
+              <div class="anuncio-cat-badge">🌸 Decoração</div>
+              <div style="display:flex;align-items:center;justify-content:center;height:100%;font-size:4rem;">🌸</div>
+            </div>
+            <div class="anuncio-corpo">
+              <div class="anuncio-nome">Studio Flor & Vida</div>
+              <div class="anuncio-cat">Decoração floral e temática</div>
+              <div class="anuncio-info">
+                <div class="anuncio-avaliacao">⭐ 5.0 <span style="color:var(--cinza-texto);font-weight:400;">(183)</span></div>
+                <div class="anuncio-local">📍 Rio de Janeiro, RJ</div>
+              </div>
+              <div class="anuncio-preco" style="margin-top:8px;">Orçamento sob consulta</div>
+              <div class="anuncio-ver-perfil">Ver perfil completo →</div>
+            </div>
+          </a>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="anuncio-card" data-cat="foto-video">
+          <a href="pages/perfil-profissional.html?id=3">
+            <div class="anuncio-img" style="background:linear-gradient(135deg,#0E0820,#3D1560);">
+              <div class="anuncio-badge-destaque">⭐ DESTAQUE</div>
+              <div class="anuncio-cat-badge">📸 Foto & Vídeo</div>
+              <div style="display:flex;align-items:center;justify-content:center;height:100%;font-size:4rem;">📸</div>
+            </div>
+            <div class="anuncio-corpo">
+              <div class="anuncio-nome">Lente Mágica Fotografia</div>
+              <div class="anuncio-cat">Fotografia e filmagem de eventos</div>
+              <div class="anuncio-info">
+                <div class="anuncio-avaliacao">⭐ 4.8 <span style="color:var(--cinza-texto);font-weight:400;">(319)</span></div>
+                <div class="anuncio-local">📍 Belo Horizonte, MG</div>
+              </div>
+              <div class="anuncio-preco" style="margin-top:8px;">A partir de R$ 1.200</div>
+              <div class="anuncio-ver-perfil">Ver perfil completo →</div>
+            </div>
+          </a>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="anuncio-card" data-cat="musica">
+          <a href="pages/perfil-profissional.html?id=4">
+            <div class="anuncio-img" style="background:linear-gradient(135deg,#00C896,#1A0A2E);">
+              <div class="anuncio-badge-destaque">⭐ DESTAQUE</div>
+              <div class="anuncio-cat-badge">🎵 DJ</div>
+              <div style="display:flex;align-items:center;justify-content:center;height:100%;font-size:4rem;">🎧</div>
+            </div>
+            <div class="anuncio-corpo">
+              <div class="anuncio-nome">DJ Marcos Vibe</div>
+              <div class="anuncio-cat">DJ para festas e eventos</div>
+              <div class="anuncio-info">
+                <div class="anuncio-avaliacao">⭐ 4.9 <span style="color:var(--cinza-texto);font-weight:400;">(412)</span></div>
+                <div class="anuncio-local">📍 Curitiba, PR</div>
+              </div>
+              <div class="anuncio-preco" style="margin-top:8px;">A partir de R$ 800/evento</div>
+              <div class="anuncio-ver-perfil">Ver perfil completo →</div>
+            </div>
+          </a>
+        </div>
+
+        <!-- Card 5 -->
+        <div class="anuncio-card" data-cat="salao">
+          <a href="pages/perfil-profissional.html?id=5">
+            <div class="anuncio-img" style="background:linear-gradient(135deg,#F5A623,#E8163C);">
+              <div class="anuncio-badge-destaque">⭐ DESTAQUE</div>
+              <div class="anuncio-cat-badge">🏛️ Salão</div>
+              <div style="display:flex;align-items:center;justify-content:center;height:100%;font-size:4rem;">🏛️</div>
+            </div>
+            <div class="anuncio-corpo">
+              <div class="anuncio-nome">Espaço Grand Celebrate</div>
+              <div class="anuncio-cat">Salão de festas completo</div>
+              <div class="anuncio-info">
+                <div class="anuncio-avaliacao">⭐ 4.7 <span style="color:var(--cinza-texto);font-weight:400;">(156)</span></div>
+                <div class="anuncio-local">📍 Brasília, DF</div>
+              </div>
+              <div class="anuncio-preco" style="margin-top:8px;">A partir de R$ 3.500/dia</div>
+              <div class="anuncio-ver-perfil">Ver perfil completo →</div>
+            </div>
+          </a>
+        </div>
+
+        <!-- Card 6 -->
+        <div class="anuncio-card" data-cat="doces">
+          <a href="pages/perfil-profissional.html?id=6">
+            <div class="anuncio-img" style="background:linear-gradient(135deg,#FF6B9D,#1A0A2E);">
+              <div class="anuncio-badge-destaque">⭐ DESTAQUE</div>
+              <div class="anuncio-cat-badge">🎂 Confeitaria</div>
+              <div style="display:flex;align-items:center;justify-content:center;height:100%;font-size:4rem;">🎂</div>
+            </div>
+            <div class="anuncio-corpo">
+              <div class="anuncio-nome">Doce Vida Confeitaria</div>
+              <div class="anuncio-cat">Bolos artísticos e doces finos</div>
+              <div class="anuncio-info">
+                <div class="anuncio-avaliacao">⭐ 5.0 <span style="color:var(--cinza-texto);font-weight:400;">(289)</span></div>
+                <div class="anuncio-local">📍 Salvador, BA</div>
+              </div>
+              <div class="anuncio-preco" style="margin-top:8px;">A partir de R$ 280</div>
+              <div class="anuncio-ver-perfil">Ver perfil completo →</div>
+            </div>
+          </a>
+        </div>
+
+      </div><!-- fim carrossel-track -->
+    </div><!-- fim carrossel-wrapper -->
+    <div style="text-align:center;margin-top:32px;">
+      <a href="pages/busca.html" class="btn btn-secundario">Ver todos os fornecedores →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ COMO FUNCIONA ============ -->
+<section class="secao como-funciona" id="como-funciona">
+  <div class="container" style="text-align:center;">
+    <div class="badge" style="background:rgba(245,166,35,0.15);color:var(--cor-secundaria);border-color:rgba(245,166,35,0.3);justify-content:center;">Como Funciona</div>
+    <h2 class="titulo-secao" style="text-align:center;color:white;">Simples, rápido e <span style="color:var(--cor-secundaria);">eficiente</span></h2>
+    <p class="subtitulo-secao" style="text-align:center;margin:0 auto;">Encontre o fornecedor ideal em poucos passos</p>
+
+    <div class="steps-grid" style="margin-top:56px;position:relative;">
+      <div class="step-card">
+        <div class="step-num">1</div>
+        <div class="step-titulo">Busque pelo serviço</div>
+        <div class="step-desc">Digite o que precisa: buffet, DJ, decoração, fotógrafo... Filtre por cidade e categoria.</div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">2</div>
+        <div class="step-titulo">Compare os perfis</div>
+        <div class="step-desc">Veja fotos, avaliações, preços e localizações dos fornecedores na sua região.</div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">3</div>
+        <div class="step-titulo">Entre em contato</div>
+        <div class="step-desc">Faça seu cadastro grátis e entre em contato diretamente pelo perfil do fornecedor.</div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">4</div>
+        <div class="step-titulo">Realize seu evento</div>
+        <div class="step-desc">Feche o negócio, avalie o serviço e ajude outros usuários a encontrar os melhores!</div>
+      </div>
+    </div>
+
+    <div style="margin-top:48px;display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
+      <a href="#" data-modal="modal-cadastro" class="btn btn-dourado btn-lg">Cadastrar grátis como usuário</a>
+      <a href="pages/profissional-cadastro.html" class="btn btn-branco btn-lg">Quero anunciar meu negócio</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PLANOS ============ -->
+<section class="secao" id="planos">
+  <div class="container">
+    <div style="text-align:center;">
+      <div class="badge" style="justify-content:center;">Planos & Preços</div>
+      <h2 class="titulo-secao" style="text-align:center;">Escolha o plano <span>ideal</span></h2>
+      <p class="subtitulo-secao" style="margin:0 auto 12px;text-align:center;">Sem fidelidade. Cancele quando quiser. Anúncios em destaque cobrados à parte.</p>
+    </div>
+
+    <div class="planos-grid" style="max-width:960px;margin:0 auto;">
+      <!-- Gratuito Usuário -->
+      <div class="plano-card">
+        <div class="plano-nome">Para Usuários</div>
+        <div class="plano-preco"><sup>R$</sup>0<span>/mês</span></div>
+        <div class="plano-periodo">Sempre gratuito para quem busca serviços</div>
+        <div class="plano-features">
+          <div class="plano-feature"><div class="check">✓</div>Cadastro com e-mail ou Google</div>
+          <div class="plano-feature"><div class="check">✓</div>Busca ilimitada de fornecedores</div>
+          <div class="plano-feature"><div class="check">✓</div>Contato direto com profissionais</div>
+          <div class="plano-feature"><div class="check">✓</div>Salvar favoritos</div>
+          <div class="plano-feature"><div class="check">✓</div>Avaliar fornecedores</div>
+        </div>
+        <a href="#" data-modal="modal-cadastro" class="btn btn-secundario" style="width:100%;justify-content:center;">Criar conta grátis</a>
+      </div>
+
+      <!-- Profissional Básico -->
+      <div class="plano-card destaque-plano">
+        <div class="plano-badge-popular">🔥 MAIS POPULAR</div>
+        <div class="plano-nome">Profissional</div>
+        <div class="plano-preco"><sup>R$</sup>89<span>/mês</span></div>
+        <div class="plano-periodo">Sem fidelidade · Cancele quando quiser</div>
+        <div class="plano-features">
+          <div class="plano-feature"><div class="check">✓</div>Perfil completo com 4 fotos</div>
+          <div class="plano-feature"><div class="check">✓</div>Aparece nas buscas</div>
+          <div class="plano-feature"><div class="check">✓</div>Mapa de geolocalização</div>
+          <div class="plano-feature"><div class="check">✓</div>Receber avaliações</div>
+          <div class="plano-feature"><div class="check">✓</div>Painel de métricas</div>
+          <div class="plano-feature"><div class="check">✓</div>Suporte prioritário</div>
+        </div>
+        <a href="pages/profissional-cadastro.html" class="btn btn-dourado" style="width:100%;justify-content:center;">Começar agora</a>
+      </div>
+
+      <!-- Premium + Destaque -->
+      <div class="plano-card">
+        <div class="plano-nome">Premium</div>
+        <div class="plano-preco"><sup>R$</sup>159<span>/mês</span></div>
+        <div class="plano-periodo">Sem fidelidade · Cancele quando quiser</div>
+        <div class="plano-features">
+          <div class="plano-feature"><div class="check">✓</div>Tudo do plano Profissional</div>
+          <div class="plano-feature"><div class="check">✓</div>Posição privilegiada nas buscas</div>
+          <div class="plano-feature"><div class="check">✓</div>Badge verificado no perfil</div>
+          <div class="plano-feature"><div class="check">✓</div>Estatísticas avançadas</div>
+          <div class="plano-feature"><div class="check">✓</div>Desconto em anúncios destaque</div>
+          <div class="plano-feature"><div class="check">✓</div>Acesso antecipado a novidades</div>
+        </div>
+        <a href="pages/profissional-cadastro.html" class="btn btn-primario" style="width:100%;justify-content:center;">Assinar Premium</a>
+      </div>
+    </div>
+
+    <!-- Anúncios em destaque -->
+    <div class="anuncios-preco" style="max-width:960px;margin:32px auto 0;">
+      <h3 style="font-weight:700;color:var(--cor-terciaria);font-size:1.1rem;margin-bottom:4px;">💛 Anúncios em Destaque na Página Inicial</h3>
+      <p style="font-size:0.88rem;color:var(--cinza-texto);">Cobrados à parte da assinatura. Apareça no carrossel de destaques com sua imagem e link direto para seu perfil.</p>
+      <div class="anuncios-preco-grid">
+        <div class="ap-item selecionado">
+          <div class="ap-tipo">Semanal</div>
+          <div class="ap-preco">R$49</div>
+          <div class="ap-desc">7 dias no carrossel</div>
+        </div>
+        <div class="ap-item">
+          <div class="ap-tipo">Quinzenal</div>
+          <div class="ap-preco">R$89</div>
+          <div class="ap-desc">15 dias em destaque</div>
+        </div>
+        <div class="ap-item">
+          <div class="ap-tipo">Mensal</div>
+          <div class="ap-preco">R$149</div>
+          <div class="ap-desc">30 dias em destaque</div>
+        </div>
+        <div class="ap-item">
+          <div class="ap-tipo">Premium Banner</div>
+          <div class="ap-preco">R$249</div>
+          <div class="ap-desc">Banner topo da página</div>
+        </div>
+      </div>
+      <div style="text-align:center;margin-top:20px;">
+        <a href="pages/profissional-cadastro.html" class="btn btn-primario">Contratar anúncio em destaque</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ DEPOIMENTOS ============ -->
+<section class="secao" style="background:var(--cinza-claro);">
+  <div class="container">
+    <div style="text-align:center;">
+      <div class="badge" style="justify-content:center;">Depoimentos</div>
+      <h2 class="titulo-secao" style="text-align:center;">O que dizem sobre o <span>É Festa</span></h2>
+    </div>
+    <div class="depo-grid">
+      <div class="depo-card">
+        <div class="depo-estrelas">★★★★★</div>
+        <p class="depo-texto">"Encontrei o buffet perfeito para o casamento em menos de 30 minutos! As avaliações foram decisivas na escolha. Super recomendo o É Festa!"</p>
+        <div class="depo-autor">
+          <div class="depo-avatar" style="background:var(--grad-rosa);">👰</div>
+          <div>
+            <div class="depo-nome">Camila Rodrigues</div>
+            <div class="depo-cargo">Noiva · São Paulo, SP</div>
+          </div>
+        </div>
+      </div>
+      <div class="depo-card">
+        <div class="depo-estrelas">★★★★★</div>
+        <p class="depo-texto">"Desde que cadastrei minha empresa no É Festa, o número de clientes triplicou! A plataforma é muito fácil de usar e o suporte é excelente."</p>
+        <div class="depo-autor">
+          <div class="depo-avatar" style="background:linear-gradient(135deg,#F5A623,#E8163C);">👨‍🍳</div>
+          <div>
+            <div class="depo-nome">Ricardo Almeida</div>
+            <div class="depo-cargo">Proprietário · Buffet Premium</div>
+          </div>
+        </div>
+      </div>
+      <div class="depo-card">
+        <div class="depo-estrelas">★★★★★</div>
+        <p class="depo-texto">"Organizei a festa de formatura da minha turma usando o É Festa. Achei DJ, decoração, buffet e fotógrafo tudo num único lugar. Incrível!"</p>
+        <div class="depo-autor">
+          <div class="depo-avatar" style="background:linear-gradient(135deg,#00C896,#1A0A2E);">🎓</div>
+          <div>
+            <div class="depo-nome">Beatriz Costa</div>
+            <div class="depo-cargo">Formanda · Engenharia</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CTA FINAL ============ -->
+<section class="cta-final">
+  <div class="container">
+    <h2>Pronto para fazer <span style="color:var(--cor-secundaria);">seu evento</span> acontecer?</h2>
+    <p>Junte-se a milhares de brasileiros que já encontraram os melhores fornecedores de festas e eventos.</p>
+    <div class="cta-btns">
+      <a href="#" data-modal="modal-cadastro" class="btn btn-dourado btn-lg">🎉 Cadastrar-me grátis</a>
+      <a href="pages/profissional-cadastro.html" class="btn btn-branco btn-lg">Anunciar meu negócio</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="logo">
+          <div class="logo-icon">🎉</div>
+          <span class="logo-texto">É <span>Festa</span></span>
+        </div>
+        <p class="footer-desc">O maior marketplace de festas e eventos do Brasil. Conectamos quem precisa a quem realiza eventos inesquecíveis.</p>
+        <div class="footer-social">
+          <a href="#" class="social-btn" aria-label="Instagram">📷</a>
+          <a href="#" class="social-btn" aria-label="Facebook">👥</a>
+          <a href="#" class="social-btn" aria-label="WhatsApp">💬</a>
+          <a href="#" class="social-btn" aria-label="YouTube">▶️</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Serviços</h4>
+        <ul>
+          <li><a href="pages/busca.html?cat=casamento">Casamentos</a></li>
+          <li><a href="pages/busca.html?cat=formatura">Formaturas</a></li>
+          <li><a href="pages/busca.html?cat=buffet">Buffet</a></li>
+          <li><a href="pages/busca.html?cat=salao">Salões de Festa</a></li>
+          <li><a href="pages/busca.html?cat=shows">Shows & Ingressos</a></li>
+          <li><a href="pages/busca.html">Ver todos</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Empresa</h4>
+        <ul>
+          <li><a href="pages/como-funciona.html">Como Funciona</a></li>
+          <li><a href="pages/planos.html">Planos & Preços</a></li>
+          <li><a href="pages/profissional-cadastro.html">Anunciar</a></li>
+          <li><a href="pages/sobre.html">Sobre nós</a></li>
+          <li><a href="pages/blog.html">Blog de Eventos</a></li>
+          <li><a href="pages/contato.html">Contato</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Suporte</h4>
+        <ul>
+          <li><a href="pages/faq.html">Perguntas Frequentes</a></li>
+          <li><a href="pages/privacidade.html">Política de Privacidade</a></li>
+          <li><a href="pages/termos.html">Termos de Uso</a></li>
+          <li><a href="pages/contato.html">Central de Ajuda</a></li>
+          <li><a href="admin/index.html">Área Admin</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 É Festa. Todos os direitos reservados. Desenvolvido com 🎉 para o Brasil.</p>
+      <div class="footer-badges">
+        <span class="footer-badge">🔒 Site Seguro</span>
+        <span class="footer-badge">💳 Mercado Pago</span>
+        <span class="footer-badge">✅ LGPD</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ============ MODAL LOGIN ============ -->
+<div class="modal-overlay" id="modal-login">
+  <div class="modal">
+    <button class="modal-fechar" onclick="fecharModal('modal-login')">✕</button>
+    <div class="modal-logo"><span style="font-size:2.5rem;">🎉</span></div>
+    <h2 class="modal-titulo">Entrar no É Festa</h2>
+    <p class="modal-sub">Bem-vindo(a) de volta! Faça login para continuar.</p>
+
+    <button class="btn-google" type="button">
+      <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+      Entrar com Google
+    </button>
+    <div class="form-divider">ou com e-mail</div>
+
+    <form class="form-cadastro">
+      <div class="form-grupo">
+        <label>E-mail</label>
+        <input type="email" placeholder="seu@email.com" required>
+      </div>
+      <div class="form-grupo">
+        <label>Senha</label>
+        <input type="password" placeholder="Sua senha" required>
+      </div>
+      <button type="submit" class="btn btn-primario" style="width:100%;justify-content:center;margin-top:8px;">Entrar</button>
+    </form>
+    <p style="text-align:center;margin-top:20px;font-size:0.85rem;color:var(--cinza-texto);">
+      Não tem conta? <a href="#" onclick="fecharModal('modal-login');abrirModal('modal-cadastro')" style="color:var(--cor-primaria);font-weight:600;">Cadastre-se grátis</a>
+    </p>
+    <p style="text-align:center;margin-top:8px;font-size:0.82rem;">
+      <a href="pages/recuperar-senha.html" style="color:var(--cinza-texto);">Esqueci minha senha</a>
+    </p>
+  </div>
+</div>
+
+<!-- ============ MODAL CADASTRO ============ -->
+<div class="modal-overlay" id="modal-cadastro">
+  <div class="modal">
+    <button class="modal-fechar" onclick="fecharModal('modal-cadastro')">✕</button>
+    <div class="modal-logo"><span style="font-size:2.5rem;">🎉</span></div>
+    <h2 class="modal-titulo">Criar conta grátis</h2>
+    <p class="modal-sub">Escolha como quer se cadastrar:</p>
+
+    <div class="tipo-cadastro-escolha">
+      <div class="tipo-opcao ativo" onclick="document.querySelectorAll('.tipo-opcao').forEach(o=>o.classList.remove('ativo'));this.classList.add('ativo')">
+        <div class="tipo-emoji">🎉</div>
+        <div class="tipo-label">Sou Usuário</div>
+        <div class="tipo-desc">Busco serviços para meu evento</div>
+      </div>
+      <div class="tipo-opcao" onclick="document.querySelectorAll('.tipo-opcao').forEach(o=>o.classList.remove('ativo'));this.classList.add('ativo');window.location.href='pages/profissional-cadastro.html'">
+        <div class="tipo-emoji">🏢</div>
+        <div class="tipo-label">Sou Profissional</div>
+        <div class="tipo-desc">Ofereço serviços para eventos</div>
+      </div>
+    </div>
+
+    <button class="btn-google" type="button">
+      <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+      Cadastrar com Google
+    </button>
+    <div class="form-divider">ou preencha abaixo</div>
+
+    <form class="form-cadastro">
+      <div class="form-grupo">
+        <label>Nome completo</label>
+        <input type="text" placeholder="Seu nome completo" required>
+      </div>
+      <div class="form-grupo">
+        <label>E-mail</label>
+        <input type="email" placeholder="seu@email.com" required>
+      </div>
+      <div class="form-grupo">
+        <label>WhatsApp / Telefone</label>
+        <input type="tel" placeholder="(11) 99999-9999" required>
+      </div>
+      <div class="form-grupo">
+        <label>Senha</label>
+        <input type="password" placeholder="Mínimo 8 caracteres" required minlength="8">
+      </div>
+      <div style="font-size:0.78rem;color:var(--cinza-texto);margin-bottom:16px;">
+        Ao criar sua conta, você concorda com nossos <a href="pages/termos.html" style="color:var(--cor-primaria);">Termos de Uso</a> e <a href="pages/privacidade.html" style="color:var(--cor-primaria);">Política de Privacidade</a>.
+      </div>
+      <button type="submit" class="btn btn-primario" style="width:100%;justify-content:center;">Criar conta grátis 🎉</button>
+    </form>
+    <p style="text-align:center;margin-top:16px;font-size:0.85rem;color:var(--cinza-texto);">
+      Já tem conta? <a href="#" onclick="fecharModal('modal-cadastro');abrirModal('modal-login')" style="color:var(--cor-primaria);font-weight:600;">Entrar</a>
+    </p>
+  </div>
+</div>
+
+<!-- ============ TOAST ============ -->
+<div class="toast" id="toast"></div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

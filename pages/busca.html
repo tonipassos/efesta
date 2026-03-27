@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Buscar Fornecedores — É Festa</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <style>
+    .busca-page { padding-top: 80px; min-height: 100vh; background: var(--cinza-claro); }
+    .busca-hero {
+      background: var(--cor-terciaria);
+      padding: 40px 0;
+    }
+    .busca-form-bar {
+      background: white;
+      border-radius: var(--raio-xl);
+      padding: 8px 8px 8px 20px;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.2);
+      flex-wrap: wrap;
+    }
+    .busca-form-bar input, .busca-form-bar select {
+      border: none;
+      outline: none;
+      font-family: var(--fonte-corpo);
+      font-size: 0.95rem;
+      color: var(--preto-suave);
+      background: none;
+      padding: 8px 4px;
+    }
+    .busca-form-bar .sep {
+      width: 1px;
+      height: 24px;
+      background: var(--cinza-medio);
+    }
+    .busca-body { padding: 32px 0; }
+    .busca-layout {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+    .filtros-sidebar {
+      background: white;
+      border-radius: var(--raio);
+      padding: 24px;
+      box-shadow: var(--sombra-card);
+      position: sticky;
+      top: 100px;
+    }
+    .filtro-grupo { margin-bottom: 24px; border-bottom: 1px solid var(--cinza-medio); padding-bottom: 20px; }
+    .filtro-grupo:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+    .filtro-titulo { font-weight: 700; font-size: 0.85rem; color: var(--cor-terciaria); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .filtro-opcao { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; cursor: pointer; font-size: 0.88rem; color: var(--cinza-texto); }
+    .filtro-opcao input { accent-color: var(--cor-primaria); }
+    .range-preco { display: flex; gap: 10px; align-items: center; }
+    .range-preco input { width: 100%; padding: 8px 12px; border: 1px solid var(--cinza-medio); border-radius: var(--raio-sm); font-size: 0.85rem; font-family: var(--fonte-corpo); outline: none; }
+    .resultados-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .resultados-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 20px;
+    }
+    .card-resultado {
+      background: white;
+      border-radius: var(--raio);
+      overflow: hidden;
+      box-shadow: var(--sombra-card);
+      transition: var(--transicao);
+      cursor: pointer;
+    }
+    .card-resultado:hover { transform: translateY(-4px); box-shadow: var(--sombra-hover); }
+    .card-res-img {
+      height: 170px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3.5rem;
+    }
+    .card-res-corpo { padding: 16px; }
+    .card-res-nome { font-weight: 700; font-size: 0.95rem; color: var(--preto-suave); margin-bottom: 4px; }
+    .card-res-cat { font-size: 0.78rem; color: var(--cinza-texto); margin-bottom: 10px; }
+    .card-res-info { display: flex; justify-content: space-between; align-items: center; }
+    .tags-busca { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+    .tag { background: rgba(232,22,60,0.08); color: var(--cor-primaria); padding: 4px 10px; border-radius: 100px; font-size: 0.75rem; font-weight: 600; cursor: pointer; }
+    .tag:hover { background: var(--cor-primaria); color: white; }
+    .mapa-resultado { height: 300px; border-radius: var(--raio); overflow: hidden; margin-bottom: 24px; }
+    .view-toggle { display: flex; gap: 4px; background: var(--cinza-claro); border-radius: 8px; padding: 3px; }
+    .view-btn { padding: 6px 14px; border-radius: 6px; border: none; font-size: 0.82rem; cursor: pointer; font-family: var(--fonte-corpo); font-weight: 600; transition: var(--transicao); background: none; color: var(--cinza-texto); }
+    .view-btn.ativo { background: white; color: var(--cor-terciaria); box-shadow: 0 1px 4px rgba(0,0,0,0.1); }
+    .sort-select { padding: 8px 14px; border: 1px solid var(--cinza-medio); border-radius: 100px; font-size: 0.85rem; font-family: var(--fonte-corpo); outline: none; color: var(--cor-terciaria); cursor: pointer; }
+    @media(max-width:900px){ .busca-layout { grid-template-columns: 1fr; } .filtros-sidebar { position: static; } }
+  </style>
+</head>
+<body>
+
+<header class="header scrolled" id="header">
+  <div class="container header-inner">
+    <a href="../index.html" class="logo"><div class="logo-icon">🎉</div><span class="logo-texto">É <span>Festa</span></span></a>
+    <nav class="nav-links">
+      <a href="../index.html#categorias">Categorias</a>
+      <a href="como-funciona.html">Como Funciona</a>
+      <a href="planos.html">Planos</a>
+    </nav>
+    <div class="nav-acoes">
+      <a href="#" class="btn-login-nav nav-links" data-modal="modal-login">Entrar</a>
+      <a href="#" class="btn btn-primario btn-sm" data-modal="modal-cadastro">Cadastrar-se</a>
+    </div>
+  </div>
+</header>
+
+<div class="busca-page">
+  <!-- Barra de busca hero -->
+  <section class="busca-hero">
+    <div class="container">
+      <p style="color:rgba(255,255,255,0.5);font-size:0.82rem;margin-bottom:12px;">Resultados para: <strong style="color:white;">Todos os fornecedores</strong></p>
+      <form class="busca-form-bar" onsubmit="event.preventDefault();">
+        <span style="font-size:1.1rem;color:var(--cinza-texto);">🔍</span>
+        <input type="text" id="busca-input" placeholder="O que você precisa?" style="flex:1;min-width:150px;">
+        <div class="sep"></div>
+        <select style="color:var(--cinza-texto);">
+          <option>Todas as categorias</option>
+          <option>Buffet</option>
+          <option>Decoração</option>
+          <option>Foto & Vídeo</option>
+          <option>DJ & Música</option>
+          <option>Salões de Festa</option>
+          <option>Casamentos</option>
+          <option>Formaturas</option>
+          <option>Bolos & Confeitaria</option>
+          <option>Iluminação</option>
+          <option>Locação de Itens</option>
+          <option>Estruturas</option>
+          <option>Shows & Ingressos</option>
+          <option>Animação</option>
+          <option>Transporte</option>
+          <option>Open Bar</option>
+          <option>Convites</option>
+          <option>Segurança</option>
+          <option>Floricultura</option>
+          <option>Assessoria</option>
+          <option>Fotocabine</option>
+        </select>
+        <div class="sep"></div>
+        <input type="text" id="busca-local" placeholder="Cidade ou Estado" style="max-width:160px;">
+        <button type="submit" class="btn btn-primario btn-sm">Buscar</button>
+      </form>
+
+      <!-- Tags de busca rápida -->
+      <div class="tags-busca" style="margin-top:14px;">
+        <span class="tag" style="background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.7);border:none;" onclick="this.style.background='var(--cor-primaria)';this.style.color='white'">Casamentos</span>
+        <span class="tag" style="background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.7);border:none;">Buffet</span>
+        <span class="tag" style="background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.7);border:none;">Decoração</span>
+        <span class="tag" style="background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.7);border:none;">Fotografia</span>
+        <span class="tag" style="background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.7);border:none;">DJ</span>
+        <span class="tag" style="background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.7);border:none;">Bolos</span>
+        <span class="tag" style="background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.7);border:none;">Formatura</span>
+        <span class="tag" style="background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.7);border:none;">📍 Perto de mim</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Corpo da busca -->
+  <section class="busca-body">
+    <div class="container">
+      <div class="busca-layout">
+
+        <!-- FILTROS -->
+        <aside class="filtros-sidebar">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+            <div style="font-weight:700;color:var(--cor-terciaria);">🎛️ Filtros</div>
+            <button onclick="limparFiltros()" style="font-size:0.78rem;color:var(--cor-primaria);background:none;border:none;cursor:pointer;font-family:var(--fonte-corpo);">Limpar tudo</button>
+          </div>
+
+          <div class="filtro-grupo">
+            <div class="filtro-titulo">Avaliação mínima</div>
+            <label class="filtro-opcao"><input type="radio" name="avaliacao" value="5"> ★★★★★ 5.0</label>
+            <label class="filtro-opcao"><input type="radio" name="avaliacao" value="4" checked> ★★★★☆ 4.0+</label>
+            <label class="filtro-opcao"><input type="radio" name="avaliacao" value="3"> ★★★☆☆ 3.0+</label>
+            <label class="filtro-opcao"><input type="radio" name="avaliacao" value="0"> Qualquer</label>
+          </div>
+
+          <div class="filtro-grupo">
+            <div class="filtro-titulo">Localização</div>
+            <div class="form-grupo" style="margin-bottom:10px;"><input type="text" placeholder="Cidade" style="width:100%;padding:8px 12px;border:1px solid var(--cinza-medio);border-radius:var(--raio-sm);font-size:0.85rem;font-family:var(--fonte-corpo);outline:none;"></div>
+            <label class="filtro-opcao"><input type="checkbox"> Apenas com geolocalização</label>
+            <label class="filtro-opcao"><input type="checkbox"> Atende em todo o Brasil</label>
+          </div>
+
+          <div class="filtro-grupo">
+            <div class="filtro-titulo">Tipo de evento</div>
+            <label class="filtro-opcao"><input type="checkbox" checked> Casamentos</label>
+            <label class="filtro-opcao"><input type="checkbox" checked> Formaturas</label>
+            <label class="filtro-opcao"><input type="checkbox"> Aniversários</label>
+            <label class="filtro-opcao"><input type="checkbox"> Corporativo</label>
+            <label class="filtro-opcao"><input type="checkbox"> Shows & Feiras</label>
+            <label class="filtro-opcao"><input type="checkbox"> Eventos religiosos</label>
+          </div>
+
+          <div class="filtro-grupo">
+            <div class="filtro-titulo">Faixa de preço (por pessoa ou serviço)</div>
+            <div class="range-preco">
+              <input type="text" placeholder="Mín. R$">
+              <span style="color:var(--cinza-texto);">—</span>
+              <input type="text" placeholder="Máx. R$">
+            </div>
+          </div>
+
+          <div class="filtro-grupo">
+            <div class="filtro-titulo">Destaque</div>
+            <label class="filtro-opcao"><input type="checkbox"> Somente destaques ⭐</label>
+            <label class="filtro-opcao"><input type="checkbox"> Perfil verificado ✅</label>
+            <label class="filtro-opcao"><input type="checkbox"> Resposta rápida 🕐</label>
+          </div>
+
+          <button class="btn btn-primario" style="width:100%;justify-content:center;margin-top:8px;">Aplicar filtros</button>
+        </aside>
+
+        <!-- RESULTADOS -->
+        <div>
+          <!-- Mapa opcional -->
+          <div class="mapa-resultado" id="mapa-busca"></div>
+
+          <!-- Header dos resultados -->
+          <div class="resultados-header">
+            <div>
+              <strong style="color:var(--cor-terciaria);" id="qtd-resultados">5.210 fornecedores encontrados</strong>
+              <span style="color:var(--cinza-texto);font-size:0.85rem;"> · Brasil</span>
+            </div>
+            <div style="display:flex;gap:12px;align-items:center;">
+              <div class="view-toggle">
+                <button class="view-btn ativo" onclick="setView('grid',this)">⊞ Grade</button>
+                <button class="view-btn" onclick="setView('lista',this)">☰ Lista</button>
+              </div>
+              <select class="sort-select" onchange="ordenarResultados(this.value)">
+                <option value="relevancia">Relevância</option>
+                <option value="avaliacao">Melhor avaliação</option>
+                <option value="destaque">Em destaque</option>
+                <option value="preco-asc">Menor preço</option>
+                <option value="preco-desc">Maior preço</option>
+                <option value="recente">Mais recente</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Grid de resultados -->
+          <div class="resultados-grid" id="resultados-grid">
+
+            <!-- Card 1 -->
+            <a href="perfil-profissional.html?id=1" class="card-resultado" data-cat="buffet">
+              <div class="card-res-img" style="background:linear-gradient(135deg,#1A0A2E,#E8163C);">
+                <div class="anuncio-badge-destaque" style="top:10px;left:10px;">⭐ DESTAQUE</div>
+                🍽️
+              </div>
+              <div class="card-res-corpo">
+                <div class="card-res-nome">Buffet Sabor & Arte</div>
+                <div class="card-res-cat">🍽️ Buffet & Gastronomia · São Paulo, SP</div>
+                <div class="card-res-info">
+                  <div class="anuncio-avaliacao" style="font-size:0.82rem;">⭐ 4.9 <span style="color:var(--cinza-texto);">(247)</span></div>
+                  <div style="color:var(--cor-verde);font-size:0.82rem;font-weight:700;">R$89/pessoa</div>
+                </div>
+              </div>
+            </a>
+
+            <!-- Card 2 -->
+            <a href="perfil-profissional.html?id=2" class="card-resultado" data-cat="decoracao">
+              <div class="card-res-img" style="background:linear-gradient(135deg,#FF6B9D,#F5A623);">
+                <div class="anuncio-badge-destaque" style="top:10px;left:10px;">⭐ DESTAQUE</div>
+                🌸
+              </div>
+              <div class="card-res-corpo">
+                <div class="card-res-nome">Studio Flor & Vida</div>
+                <div class="card-res-cat">🌸 Decoração · Rio de Janeiro, RJ</div>
+                <div class="card-res-info">
+                  <div class="anuncio-avaliacao" style="font-size:0.82rem;">⭐ 5.0 <span style="color:var(--cinza-texto);">(183)</span></div>
+                  <div style="color:var(--cor-verde);font-size:0.82rem;font-weight:700;">Sob consulta</div>
+                </div>
+              </div>
+            </a>
+
+            <!-- Card 3 -->
+            <a href="perfil-profissional.html?id=3" class="card-resultado" data-cat="foto-video">
+              <div class="card-res-img" style="background:linear-gradient(135deg,#0E0820,#3D1560);">
+                📸
+              </div>
+              <div class="card-res-corpo">
+                <div class="card-res-nome">Lente Mágica Fotografia</div>
+                <div class="card-res-cat">📸 Foto & Vídeo · Belo Horizonte, MG</div>
+                <div class="card-res-info">
+                  <div class="anuncio-avaliacao" style="font-size:0.82rem;">⭐ 4.8 <span style="color:var(--cinza-texto);">(319)</span></div>
+                  <div style="color:var(--cor-verde);font-size:0.82rem;font-weight:700;">R$1.200</div>
+                </div>
+              </div>
+            </a>
+
+            <!-- Card 4 -->
+            <a href="perfil-profissional.html?id=4" class="card-resultado" data-cat="musica">
+              <div class="card-res-img" style="background:linear-gradient(135deg,#00C896,#1A0A2E);">
+                🎧
+              </div>
+              <div class="card-res-corpo">
+                <div class="card-res-nome">DJ Marcos Vibe</div>
+                <div class="card-res-cat">🎵 DJ & Música · Curitiba, PR</div>
+                <div class="card-res-info">
+                  <div class="anuncio-avaliacao" style="font-size:0.82rem;">⭐ 4.9 <span style="color:var(--cinza-texto);">(412)</span></div>
+                  <div style="color:var(--cor-verde);font-size:0.82rem;font-weight:700;">R$800/evento</div>
+                </div>
+              </div>
+            </a>
+
+            <!-- Card 5 -->
+            <a href="perfil-profissional.html?id=5" class="card-resultado" data-cat="salao">
+              <div class="card-res-img" style="background:linear-gradient(135deg,#F5A623,#E8163C);">
+                🏛️
+              </div>
+              <div class="card-res-corpo">
+                <div class="card-res-nome">Espaço Grand Celebrate</div>
+                <div class="card-res-cat">🏛️ Salão de Festas · Brasília, DF</div>
+                <div class="card-res-info">
+                  <div class="anuncio-avaliacao" style="font-size:0.82rem;">⭐ 4.7 <span style="color:var(--cinza-texto);">(156)</span></div>
+                  <div style="color:var(--cor-verde);font-size:0.82rem;font-weight:700;">R$3.500/dia</div>
+                </div>
+              </div>
+            </a>
+
+            <!-- Card 6 -->
+            <a href="perfil-profissional.html?id=6" class="card-resultado" data-cat="doces">
+              <div class="card-res-img" style="background:linear-gradient(135deg,#FF6B9D,#1A0A2E);">
+                🎂
+              </div>
+              <div class="card-res-corpo">
+                <div class="card-res-nome">Doce Vida Confeitaria</div>
+                <div class="card-res-cat">🎂 Bolos & Confeitaria · Salvador, BA</div>
+                <div class="card-res-info">
+                  <div class="anuncio-avaliacao" style="font-size:0.82rem;">⭐ 5.0 <span style="color:var(--cinza-texto);">(289)</span></div>
+                  <div style="color:var(--cor-verde);font-size:0.82rem;font-weight:700;">R$280</div>
+                </div>
+              </div>
+            </a>
+
+            <!-- Card 7 -->
+            <a href="perfil-profissional.html?id=7" class="card-resultado" data-cat="iluminacao">
+              <div class="card-res-img" style="background:linear-gradient(135deg,#FFD700,#E8163C);">
+                💡
+              </div>
+              <div class="card-res-corpo">
+                <div class="card-res-nome">Light Show Produções</div>
+                <div class="card-res-cat">💡 Iluminação & Sonorização · São Paulo, SP</div>
+                <div class="card-res-info">
+                  <div class="anuncio-avaliacao" style="font-size:0.82rem;">⭐ 4.8 <span style="color:var(--cinza-texto);">(97)</span></div>
+                  <div style="color:var(--cor-verde);font-size:0.82rem;font-weight:700;">A partir R$500</div>
+                </div>
+              </div>
+            </a>
+
+            <!-- Card 8 -->
+            <a href="perfil-profissional.html?id=8" class="card-resultado" data-cat="floricultura">
+              <div class="card-res-img" style="background:linear-gradient(135deg,#00C896,#FF6B9D);">
+                💐
+              </div>
+              <div class="card-res-corpo">
+                <div class="card-res-nome">Flores & Eventos Bela</div>
+                <div class="card-res-cat">💐 Floricultura · Porto Alegre, RS</div>
+                <div class="card-res-info">
+                  <div class="anuncio-avaliacao" style="font-size:0.82rem;">⭐ 4.9 <span style="color:var(--cinza-texto);">(204)</span></div>
+                  <div style="color:var(--cor-verde);font-size:0.82rem;font-weight:700;">Sob consulta</div>
+                </div>
+              </div>
+            </a>
+
+            <!-- Card 9 -->
+            <a href="perfil-profissional.html?id=9" class="card-resultado" data-cat="animacao">
+              <div class="card-res-img" style="background:linear-gradient(135deg,#B931FC,#F5A623);">
+                🎭
+              </div>
+              <div class="card-res-corpo">
+                <div class="card-res-nome">Alegria Animações</div>
+                <div class="card-res-cat">🎭 Animação & Recreação · Fortaleza, CE</div>
+                <div class="card-res-info">
+                  <div class="anuncio-avaliacao" style="font-size:0.82rem;">⭐ 4.7 <span style="color:var(--cinza-texto);">(88)</span></div>
+                  <div style="color:var(--cor-verde);font-size:0.82rem;font-weight:700;">R$400/evento</div>
+                </div>
+              </div>
+            </a>
+
+          </div><!-- fim resultados-grid -->
+
+          <!-- Paginação -->
+          <div style="display:flex;justify-content:center;gap:8px;margin-top:40px;align-items:center;">
+            <button style="width:36px;height:36px;border:1px solid var(--cinza-medio);border-radius:8px;background:white;cursor:pointer;font-size:0.85rem;">‹</button>
+            <button style="width:36px;height:36px;border:2px solid var(--cor-primaria);border-radius:8px;background:var(--cor-primaria);color:white;cursor:pointer;font-size:0.85rem;font-weight:700;">1</button>
+            <button style="width:36px;height:36px;border:1px solid var(--cinza-medio);border-radius:8px;background:white;cursor:pointer;font-size:0.85rem;">2</button>
+            <button style="width:36px;height:36px;border:1px solid var(--cinza-medio);border-radius:8px;background:white;cursor:pointer;font-size:0.85rem;">3</button>
+            <span style="color:var(--cinza-texto);">...</span>
+            <button style="width:36px;height:36px;border:1px solid var(--cinza-medio);border-radius:8px;background:white;cursor:pointer;font-size:0.85rem;">52</button>
+            <button style="width:36px;height:36px;border:1px solid var(--cinza-medio);border-radius:8px;background:white;cursor:pointer;font-size:0.85rem;">›</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- Modais login/cadastro (reutilizados) -->
+<div class="modal-overlay" id="modal-login">
+  <div class="modal">
+    <button class="modal-fechar" onclick="fecharModal('modal-login')">✕</button>
+    <h2 class="modal-titulo">Entrar no É Festa</h2>
+    <form class="form-cadastro">
+      <div class="form-grupo"><label>E-mail</label><input type="email" placeholder="seu@email.com" required></div>
+      <div class="form-grupo"><label>Senha</label><input type="password" required></div>
+      <button type="submit" class="btn btn-primario" style="width:100%;justify-content:center;">Entrar</button>
+    </form>
+  </div>
+</div>
+<div class="modal-overlay" id="modal-cadastro">
+  <div class="modal">
+    <button class="modal-fechar" onclick="fecharModal('modal-cadastro')">✕</button>
+    <h2 class="modal-titulo">Criar conta grátis</h2>
+    <form class="form-cadastro">
+      <div class="form-grupo"><label>Nome</label><input type="text" required></div>
+      <div class="form-grupo"><label>E-mail</label><input type="email" required></div>
+      <div class="form-grupo"><label>Telefone</label><input type="tel" required></div>
+      <div class="form-grupo"><label>Senha</label><input type="password" required minlength="8"></div>
+      <button type="submit" class="btn btn-primario" style="width:100%;justify-content:center;">Criar conta grátis 🎉</button>
+    </form>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="../js/main.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  // Mapa de busca com múltiplos pins
+  const mapa = L.map('mapa-busca', { zoomControl: true }).setView([-15.77, -47.92], 4);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(mapa);
+  const pins = [
+    [-23.56, -46.65, 'Buffet Sabor & Arte', 'São Paulo'],
+    [-22.90, -43.17, 'Studio Flor & Vida', 'Rio de Janeiro'],
+    [-19.91, -43.94, 'Lente Mágica', 'Belo Horizonte'],
+    [-25.42, -49.26, 'DJ Marcos Vibe', 'Curitiba'],
+    [-15.77, -47.92, 'Espaço Grand', 'Brasília'],
+    [-12.97, -38.50, 'Doce Vida', 'Salvador'],
+  ];
+  pins.forEach(([lat, lng, nome, cidade]) => {
+    L.marker([lat, lng]).addTo(mapa).bindPopup(`<b>${nome}</b><br>${cidade}`);
+  });
+});
+
+function setView(tipo, btn) {
+  document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('ativo'));
+  btn.classList.add('ativo');
+  const grid = document.getElementById('resultados-grid');
+  if (tipo === 'lista') {
+    grid.style.gridTemplateColumns = '1fr';
+  } else {
+    grid.style.gridTemplateColumns = '';
+  }
+}
+
+function ordenarResultados(val) {
+  mostrarToast('🔄 Resultados ordenados por: ' + val, '');
+}
+
+function limparFiltros() {
+  document.querySelectorAll('.filtros-sidebar input[type=checkbox], .filtros-sidebar input[type=radio]').forEach(i => i.checked = false);
+  mostrarToast('✅ Filtros limpos', 'sucesso');
+}
+</script>
+</body>
+</html>

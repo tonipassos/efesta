@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meu Painel — É Festa</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .painel-page { padding-top: 80px; min-height: 100vh; background: var(--cinza-claro); }
+    .painel-hero {
+      background: var(--grad-hero);
+      padding: 40px 0;
+      color: white;
+    }
+    .painel-grid {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      gap: 24px;
+      padding: 32px 0;
+      align-items: start;
+    }
+    .painel-sidebar {
+      background: white;
+      border-radius: var(--raio);
+      overflow: hidden;
+      box-shadow: var(--sombra-card);
+      position: sticky;
+      top: 100px;
+    }
+    .painel-avatar {
+      background: var(--grad-hero);
+      padding: 28px 24px;
+      text-align: center;
+    }
+    .avatar-circle {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: var(--grad-rosa);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5rem;
+      margin: 0 auto 12px;
+      border: 3px solid rgba(255,255,255,0.3);
+    }
+    .painel-nav { padding: 12px 0; }
+    .painel-nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 20px;
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: var(--cinza-texto);
+      cursor: pointer;
+      transition: var(--transicao);
+    }
+    .painel-nav-item:hover, .painel-nav-item.ativo {
+      color: var(--cor-primaria);
+      background: rgba(232,22,60,0.05);
+      border-right: 3px solid var(--cor-primaria);
+    }
+    .painel-content { display: flex; flex-direction: column; gap: 20px; }
+    .painel-card {
+      background: white;
+      border-radius: var(--raio);
+      padding: 28px;
+      box-shadow: var(--sombra-card);
+    }
+    .painel-card-titulo {
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--cor-terciaria);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .favorito-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px;
+      border: 1px solid var(--cinza-medio);
+      border-radius: var(--raio-sm);
+      margin-bottom: 10px;
+      transition: var(--transicao);
+    }
+    .favorito-item:hover { border-color: var(--cor-primaria); }
+    .fav-info { display: flex; align-items: center; gap: 12px; }
+    .fav-icon { width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; flex-shrink: 0; }
+    .historico-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--cinza-medio);
+    }
+    .historico-item:last-child { border-bottom: none; }
+    .hist-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    @media(max-width:768px){ .painel-grid { grid-template-columns: 1fr; } .painel-sidebar { position: static; } }
+  </style>
+</head>
+<body>
+
+<header class="header scrolled">
+  <div class="container header-inner">
+    <a href="../index.html" class="logo"><div class="logo-icon">🎉</div><span class="logo-texto">É <span>Festa</span></span></a>
+    <nav class="nav-links">
+      <a href="../pages/busca.html">Buscar fornecedores</a>
+    </nav>
+    <div class="nav-acoes">
+      <a href="../index.html" class="btn btn-secundario btn-sm">← Sair</a>
+    </div>
+  </div>
+</header>
+
+<div class="painel-page">
+  <section class="painel-hero">
+    <div class="container">
+      <div style="display:flex;align-items:center;gap:16px;">
+        <div style="width:60px;height:60px;background:var(--grad-rosa);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2rem;border:3px solid rgba(255,255,255,0.3);">👤</div>
+        <div>
+          <h1 style="font-family:var(--fonte-display);font-size:1.8rem;font-weight:900;">Olá, Ana Paula! 👋</h1>
+          <p style="color:rgba(255,255,255,0.7);font-size:0.88rem;">Membro desde Janeiro 2025 · Usuária verificada ✅</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <div class="painel-grid">
+
+        <!-- Sidebar navegação -->
+        <div class="painel-sidebar">
+          <div class="painel-avatar">
+            <div class="avatar-circle">👤</div>
+            <div style="font-weight:700;color:white;">Ana Paula Souza</div>
+            <div style="font-size:0.78rem;color:rgba(255,255,255,0.6);margin-top:4px;">ana@email.com</div>
+          </div>
+          <nav class="painel-nav">
+            <div class="painel-nav-item ativo" onclick="mostrarSecaoPainel('inicio',this)">🏠 Início</div>
+            <div class="painel-nav-item" onclick="mostrarSecaoPainel('favoritos',this)">❤️ Favoritos</div>
+            <div class="painel-nav-item" onclick="mostrarSecaoPainel('historico',this)">🕐 Histórico de buscas</div>
+            <div class="painel-nav-item" onclick="mostrarSecaoPainel('avaliacoes',this)">⭐ Minhas avaliações</div>
+            <div class="painel-nav-item" onclick="mostrarSecaoPainel('dados',this)">⚙️ Meus dados</div>
+            <div style="border-top:1px solid var(--cinza-medio);margin:8px 0;"></div>
+            <div class="painel-nav-item" onclick="window.location.href='../index.html'" style="color:var(--cor-primaria);">🔍 Buscar fornecedores</div>
+            <div class="painel-nav-item" style="color:var(--cinza-texto);" onclick="mostrarToast('👋 Você saiu da conta','')">↩️ Sair</div>
+          </nav>
+        </div>
+
+        <!-- Conteúdo principal -->
+        <div class="painel-content">
+
+          <!-- Início -->
+          <div id="secao-painel-inicio">
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:20px;">
+              <div class="painel-card" style="padding:20px;text-align:center;border-left:4px solid var(--cor-primaria);">
+                <div style="font-family:var(--fonte-display);font-size:2rem;font-weight:900;color:var(--cor-primaria);">12</div>
+                <div style="font-size:0.8rem;color:var(--cinza-texto);">Favoritos salvos</div>
+              </div>
+              <div class="painel-card" style="padding:20px;text-align:center;border-left:4px solid var(--cor-secundaria);">
+                <div style="font-family:var(--fonte-display);font-size:2rem;font-weight:900;color:var(--cor-secundaria);">5</div>
+                <div style="font-size:0.8rem;color:var(--cinza-texto);">Avaliações feitas</div>
+              </div>
+              <div class="painel-card" style="padding:20px;text-align:center;border-left:4px solid var(--cor-verde);">
+                <div style="font-family:var(--fonte-display);font-size:2rem;font-weight:900;color:var(--cor-verde);">28</div>
+                <div style="font-size:0.8rem;color:var(--cinza-texto);">Fornecedores visitados</div>
+              </div>
+            </div>
+
+            <div class="painel-card">
+              <div class="painel-card-titulo">🔍 Continue sua busca</div>
+              <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;">
+                <a href="busca.html?cat=casamento" style="background:var(--cinza-claro);border-radius:var(--raio-sm);padding:16px;text-align:center;display:block;transition:var(--transicao);" onmouseover="this.style.background='rgba(232,22,60,0.08)'" onmouseout="this.style.background='var(--cinza-claro)'">
+                  <div style="font-size:1.8rem;margin-bottom:6px;">💒</div>
+                  <div style="font-size:0.82rem;font-weight:600;color:var(--cor-terciaria);">Casamentos</div>
+                </a>
+                <a href="busca.html?cat=buffet" style="background:var(--cinza-claro);border-radius:var(--raio-sm);padding:16px;text-align:center;display:block;transition:var(--transicao);" onmouseover="this.style.background='rgba(232,22,60,0.08)'" onmouseout="this.style.background='var(--cinza-claro)'">
+                  <div style="font-size:1.8rem;margin-bottom:6px;">🍽️</div>
+                  <div style="font-size:0.82rem;font-weight:600;color:var(--cor-terciaria);">Buffet</div>
+                </a>
+                <a href="busca.html?cat=decoracao" style="background:var(--cinza-claro);border-radius:var(--raio-sm);padding:16px;text-align:center;display:block;transition:var(--transicao);" onmouseover="this.style.background='rgba(232,22,60,0.08)'" onmouseout="this.style.background='var(--cinza-claro)'">
+                  <div style="font-size:1.8rem;margin-bottom:6px;">🌸</div>
+                  <div style="font-size:0.82rem;font-weight:600;color:var(--cor-terciaria);">Decoração</div>
+                </a>
+                <a href="busca.html?cat=foto" style="background:var(--cinza-claro);border-radius:var(--raio-sm);padding:16px;text-align:center;display:block;transition:var(--transicao);" onmouseover="this.style.background='rgba(232,22,60,0.08)'" onmouseout="this.style.background='var(--cinza-claro)'">
+                  <div style="font-size:1.8rem;margin-bottom:6px;">📸</div>
+                  <div style="font-size:0.82rem;font-weight:600;color:var(--cor-terciaria);">Fotografia</div>
+                </a>
+              </div>
+            </div>
+
+            <div class="painel-card">
+              <div class="painel-card-titulo">⏱️ Visualizados recentemente</div>
+              <div class="historico-item">
+                <div class="hist-dot" style="background:var(--cor-primaria);"></div>
+                <div style="font-size:1.2rem;">🍽️</div>
+                <div style="flex:1;"><div style="font-weight:600;font-size:0.88rem;">Buffet Sabor & Arte</div><div style="font-size:0.75rem;color:var(--cinza-texto);">São Paulo, SP · Há 30 min</div></div>
+                <a href="perfil-profissional.html?id=1" class="btn btn-secundario btn-sm">Ver perfil</a>
+              </div>
+              <div class="historico-item">
+                <div class="hist-dot" style="background:var(--cor-acento);"></div>
+                <div style="font-size:1.2rem;">🌸</div>
+                <div style="flex:1;"><div style="font-weight:600;font-size:0.88rem;">Studio Flor & Vida</div><div style="font-size:0.75rem;color:var(--cinza-texto);">Rio de Janeiro, RJ · Há 2h</div></div>
+                <a href="perfil-profissional.html?id=2" class="btn btn-secundario btn-sm">Ver perfil</a>
+              </div>
+              <div class="historico-item">
+                <div class="hist-dot" style="background:var(--cor-verde);"></div>
+                <div style="font-size:1.2rem;">📸</div>
+                <div style="flex:1;"><div style="font-weight:600;font-size:0.88rem;">Lente Mágica Fotografia</div><div style="font-size:0.75rem;color:var(--cinza-texto);">Belo Horizonte, MG · Ontem</div></div>
+                <a href="perfil-profissional.html?id=3" class="btn btn-secundario btn-sm">Ver perfil</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Favoritos -->
+          <div id="secao-painel-favoritos" style="display:none;">
+            <div class="painel-card">
+              <div class="painel-card-titulo">❤️ Meus Favoritos (12)</div>
+              <div class="favorito-item">
+                <div class="fav-info">
+                  <div class="fav-icon" style="background:linear-gradient(135deg,#1A0A2E,#E8163C);">🍽️</div>
+                  <div><div style="font-weight:600;font-size:0.92rem;">Buffet Sabor & Arte</div><div style="font-size:0.78rem;color:var(--cinza-texto);">Buffet · São Paulo, SP · ⭐ 4.9</div></div>
+                </div>
+                <div style="display:flex;gap:8px;">
+                  <a href="perfil-profissional.html?id=1" class="btn btn-primario btn-sm">Ver</a>
+                  <button onclick="this.closest('.favorito-item').remove();mostrarToast('💔 Removido dos favoritos','')" class="btn btn-sm" style="background:var(--cinza-claro);color:var(--cinza-texto);">✕</button>
+                </div>
+              </div>
+              <div class="favorito-item">
+                <div class="fav-info">
+                  <div class="fav-icon" style="background:linear-gradient(135deg,#FF6B9D,#F5A623);">🌸</div>
+                  <div><div style="font-weight:600;font-size:0.92rem;">Studio Flor & Vida</div><div style="font-size:0.78rem;color:var(--cinza-texto);">Decoração · Rio de Janeiro, RJ · ⭐ 5.0</div></div>
+                </div>
+                <div style="display:flex;gap:8px;">
+                  <a href="perfil-profissional.html?id=2" class="btn btn-primario btn-sm">Ver</a>
+                  <button onclick="this.closest('.favorito-item').remove();mostrarToast('💔 Removido dos favoritos','')" class="btn btn-sm" style="background:var(--cinza-claro);color:var(--cinza-texto);">✕</button>
+                </div>
+              </div>
+              <div class="favorito-item">
+                <div class="fav-info">
+                  <div class="fav-icon" style="background:linear-gradient(135deg,#00C896,#1A0A2E);">🎧</div>
+                  <div><div style="font-weight:600;font-size:0.92rem;">DJ Marcos Vibe</div><div style="font-size:0.78rem;color:var(--cinza-texto);">DJ & Música · Curitiba, PR · ⭐ 4.9</div></div>
+                </div>
+                <div style="display:flex;gap:8px;">
+                  <a href="perfil-profissional.html?id=4" class="btn btn-primario btn-sm">Ver</a>
+                  <button onclick="this.closest('.favorito-item').remove();mostrarToast('💔 Removido dos favoritos','')" class="btn btn-sm" style="background:var(--cinza-claro);color:var(--cinza-texto);">✕</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Dados do usuário -->
+          <div id="secao-painel-dados" style="display:none;">
+            <div class="painel-card">
+              <div class="painel-card-titulo">⚙️ Meus Dados</div>
+              <form onsubmit="event.preventDefault();mostrarToast('✅ Dados salvos com sucesso!','sucesso')">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+                  <div class="form-grupo"><label>Nome completo</label><input type="text" value="Ana Paula Souza"></div>
+                  <div class="form-grupo"><label>E-mail</label><input type="email" value="ana@email.com"></div>
+                  <div class="form-grupo"><label>WhatsApp</label><input type="tel" value="(11) 99999-0001"></div>
+                  <div class="form-grupo"><label>Cidade</label><input type="text" value="São Paulo, SP"></div>
+                </div>
+                <div class="form-grupo" style="margin-top:8px;"><label>Nova senha (deixe em branco para manter)</label><input type="password" placeholder="Nova senha"></div>
+                <div style="display:flex;gap:12px;margin-top:8px;">
+                  <button type="submit" class="btn btn-primario">Salvar alterações</button>
+                  <button type="button" class="btn btn-sm" style="background:rgba(232,22,60,0.08);color:var(--cor-primaria);" onclick="mostrarToast('⚠️ Conta excluída','erro')">Excluir conta</button>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <!-- Avaliações -->
+          <div id="secao-painel-avaliacoes" style="display:none;">
+            <div class="painel-card">
+              <div class="painel-card-titulo">⭐ Minhas Avaliações (5)</div>
+              <div style="padding:16px 0;border-bottom:1px solid var(--cinza-medio);">
+                <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+                  <div style="font-weight:600;font-size:0.92rem;">Buffet Sabor & Arte</div>
+                  <div style="color:var(--cor-secundaria);">★★★★★</div>
+                </div>
+                <div style="font-size:0.85rem;color:var(--cinza-texto);">Simplesmente perfeito! Todos os convidados adoraram.</div>
+                <div style="font-size:0.75rem;color:var(--cinza-texto);margin-top:6px;">Janeiro 2025</div>
+              </div>
+              <div style="padding:16px 0;">
+                <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+                  <div style="font-weight:600;font-size:0.92rem;">DJ Marcos Vibe</div>
+                  <div style="color:var(--cor-secundaria);">★★★★☆</div>
+                </div>
+                <div style="font-size:0.85rem;color:var(--cinza-texto);">Ótimo DJ, muito animado e profissional. Recomendo!</div>
+                <div style="font-size:0.75rem;color:var(--cinza-texto);margin-top:6px;">Dezembro 2024</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Histórico -->
+          <div id="secao-painel-historico" style="display:none;">
+            <div class="painel-card">
+              <div class="painel-card-titulo">🕐 Histórico de Buscas</div>
+              <div class="historico-item"><div class="hist-dot" style="background:var(--cor-primaria);"></div><div><strong style="font-size:0.88rem;">buffet casamento São Paulo</strong><div style="font-size:0.75rem;color:var(--cinza-texto);">Hoje às 14:32 · 127 resultados</div></div><button onclick="mostrarToast('🔍 Buscando...','');" class="btn btn-sm" style="margin-left:auto;background:var(--cinza-claro);color:var(--cor-terciaria);">Repetir</button></div>
+              <div class="historico-item"><div class="hist-dot" style="background:var(--cor-acento);"></div><div><strong style="font-size:0.88rem;">decoração floral casamento</strong><div style="font-size:0.75rem;color:var(--cinza-texto);">Hoje às 12:15 · 84 resultados</div></div><button onclick="mostrarToast('🔍 Buscando...','');" class="btn btn-sm" style="margin-left:auto;background:var(--cinza-claro);color:var(--cor-terciaria);">Repetir</button></div>
+              <div class="historico-item"><div class="hist-dot" style="background:var(--cor-verde);"></div><div><strong style="font-size:0.88rem;">fotógrafo formatura BH</strong><div style="font-size:0.75rem;color:var(--cinza-texto);">Ontem às 18:40 · 52 resultados</div></div><button onclick="mostrarToast('🔍 Buscando...','');" class="btn btn-sm" style="margin-left:auto;background:var(--cinza-claro);color:var(--cor-terciaria);">Repetir</button></div>
+              <div style="margin-top:16px;"><button onclick="mostrarToast('🗑️ Histórico limpo','sucesso')" class="btn btn-sm" style="background:rgba(232,22,60,0.08);color:var(--cor-primaria);">🗑️ Limpar histórico</button></div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div class="toast" id="toast"></div>
+<script src="../js/main.js"></script>
+<script>
+function mostrarSecaoPainel(id, el) {
+  document.querySelectorAll('[id^="secao-painel-"]').forEach(s => s.style.display = 'none');
+  const target = document.getElementById('secao-painel-' + id);
+  if (target) target.style.display = 'block';
+  document.querySelectorAll('.painel-nav-item').forEach(n => n.classList.remove('ativo'));
+  if (el) el.classList.add('ativo');
+}
+</script>
+</body>
+</html>
