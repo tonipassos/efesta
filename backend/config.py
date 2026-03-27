@@ -31,8 +31,8 @@ class Settings(BaseSettings):
     ]
 
     # ── Mercado Pago ──────────────────────────────────────────────────────────
-    MERCADO_PAGO_ACCESS_TOKEN: str = "TEST-seu-access-token-aqui"
-    MERCADO_PAGO_PUBLIC_KEY: str = "TEST-sua-public-key-aqui"
+    MERCADO_PAGO_ACCESS_TOKEN: str = "APP_USR-1569466397106827-032216-916ad93d4198e7b64594030ab0701056-1318215042"
+    MERCADO_PAGO_PUBLIC_KEY: str = "APP_USR-1569466397106827-032216-916ad93d4198e7b64594030ab0701056-1318215042"
     MERCADO_PAGO_WEBHOOK_SECRET: str = "seu-webhook-secret"
 
     # ── Google OAuth ──────────────────────────────────────────────────────────
