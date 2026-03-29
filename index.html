@@ -146,108 +146,110 @@
       <p class="subtitulo-secao" style="margin:0 auto 40px;text-align:center;">Explore todas as categorias de fornecedores disponíveis na plataforma</p>
     </div>
 
-    <div class="categorias-grid" id="categorias-grid">
-      <div class="categoria-card ativo" data-cat="todos" onclick="filtrarAnuncios('todos');document.querySelectorAll('.categoria-card').forEach(c=>c.classList.remove('ativo'));this.classList.add('ativo')">
-        <div class="cat-emoji">🎉</div>
-        <div class="cat-nome">Todos</div>
-        <div class="cat-qtd">5.200+ serviços</div>
-      </div>
-      <div class="categoria-card" data-cat="casamento" onclick="filtrarAnuncios('casamento');document.querySelectorAll('.categoria-card').forEach(c=>c.classList.remove('ativo'));this.classList.add('ativo')">
-        <div class="cat-emoji">💒</div>
-        <div class="cat-nome">Casamentos</div>
-        <div class="cat-qtd">820 fornecedores</div>
-      </div>
-      <div class="categoria-card" data-cat="formatura" onclick="filtrarAnuncios('formatura');document.querySelectorAll('.categoria-card').forEach(c=>c.classList.remove('ativo'));this.classList.add('ativo')">
-        <div class="cat-emoji">🎓</div>
-        <div class="cat-nome">Formatura</div>
-        <div class="cat-qtd">410 fornecedores</div>
-      </div>
-      <div class="categoria-card" data-cat="buffet" onclick="filtrarAnuncios('buffet');document.querySelectorAll('.categoria-card').forEach(c=>c.classList.remove('ativo'));this.classList.add('ativo')">
-        <div class="cat-emoji">🍽️</div>
-        <div class="cat-nome">Buffet</div>
-        <div class="cat-qtd">680 fornecedores</div>
-      </div>
-      <div class="categoria-card" data-cat="salao" onclick="filtrarAnuncios('salao');document.querySelectorAll('.categoria-card').forEach(c=>c.classList.remove('ativo'));this.classList.add('ativo')">
-        <div class="cat-emoji">🏛️</div>
-        <div class="cat-nome">Salões de Festa</div>
-        <div class="cat-qtd">530 fornecedores</div>
-      </div>
-      <div class="categoria-card" data-cat="decoracao" onclick="filtrarAnuncios('decoracao');document.querySelectorAll('.categoria-card').forEach(c=>c.classList.remove('ativo'));this.classList.add('ativo')">
-        <div class="cat-emoji">🌸</div>
-        <div class="cat-nome">Decoração</div>
-        <div class="cat-qtd">720 fornecedores</div>
-      </div>
-      <div class="categoria-card" data-cat="foto-video" onclick="filtrarAnuncios('foto-video');document.querySelectorAll('.categoria-card').forEach(c=>c.classList.remove('ativo'));this.classList.add('ativo')">
-        <div class="cat-emoji">📸</div>
-        <div class="cat-nome">Foto & Vídeo</div>
-        <div class="cat-qtd">490 fornecedores</div>
-      </div>
-      <div class="categoria-card" data-cat="musica" onclick="filtrarAnuncios('musica');document.querySelectorAll('.categoria-card').forEach(c=>c.classList.remove('ativo'));this.classList.add('ativo')">
-        <div class="cat-emoji">🎵</div>
-        <div class="cat-nome">DJ & Música</div>
-        <div class="cat-qtd">360 fornecedores</div>
-      </div>
-      <div class="categoria-card" data-cat="ingressos" onclick="filtrarAnuncios('ingressos');document.querySelectorAll('.categoria-card').forEach(c=>c.classList.remove('ativo'));this.classList.add('ativo')">
-        <div class="cat-emoji">🎟️</div>
-        <div class="cat-nome">Shows & Ingressos</div>
-        <div class="cat-qtd">290 fornecedores</div>
-      </div>
-      <div class="categoria-card" data-cat="estrutura" onclick="filtrarAnuncios('estrutura');document.querySelectorAll('.categoria-card').forEach(c=>c.classList.remove('ativo'));this.classList.add('ativo')">
-        <div class="cat-emoji">⛺</div>
-        <div class="cat-nome">Estrutura</div>
-        <div class="cat-qtd">310 fornecedores</div>
-      </div>
-      <div class="categoria-card" data-cat="locacao" onclick="filtrarAnuncios('locacao');document.querySelectorAll('.categoria-card').forEach(c=>c.classList.remove('ativo'));this.classList.add('ativo')">
-        <div class="cat-emoji">🛋️</div>
-        <div class="cat-nome">Locação de Itens</div>
-        <div class="cat-qtd">450 fornecedores</div>
-      </div>
-      <div class="categoria-card" data-cat="iluminacao" onclick="filtrarAnuncios('iluminacao');document.querySelectorAll('.categoria-card').forEach(c=>c.classList.remove('ativo'));this.classList.add('ativo')">
-        <div class="cat-emoji">💡</div>
-        <div class="cat-nome">Iluminação</div>
-        <div class="cat-qtd">280 fornecedores</div>
-      </div>
-      <div class="categoria-card" data-cat="doces" onclick="filtrarAnuncios('doces');document.querySelectorAll('.categoria-card').forEach(c=>c.classList.remove('ativo'));this.classList.add('ativo')">
-        <div class="cat-emoji">🎂</div>
-        <div class="cat-nome">Bolos & Doces</div>
-        <div class="cat-qtd">560 fornecedores</div>
-      </div>
-      <div class="categoria-card" data-cat="seguranca" onclick="filtrarAnuncios('seguranca');document.querySelectorAll('.categoria-card').forEach(c=>c.classList.remove('ativo'));this.classList.add('ativo')">
-        <div class="cat-emoji">🔐</div>
-        <div class="cat-nome">Segurança</div>
-        <div class="cat-qtd">120 fornecedores</div>
-      </div>
-      <div class="categoria-card" data-cat="convites" onclick="filtrarAnuncios('convites');document.querySelectorAll('.categoria-card').forEach(c=>c.classList.remove('ativo'));this.classList.add('ativo')">
-        <div class="cat-emoji">✉️</div>
-        <div class="cat-nome">Convites</div>
-        <div class="cat-qtd">230 fornecedores</div>
-      </div>
-      <div class="categoria-card" data-cat="transporte" onclick="filtrarAnuncios('transporte');document.querySelectorAll('.categoria-card').forEach(c=>c.classList.remove('ativo'));this.classList.add('ativo')">
-        <div class="cat-emoji">🚌</div>
-        <div class="cat-nome">Transporte</div>
-        <div class="cat-qtd">180 fornecedores</div>
-      </div>
-      <div class="categoria-card" data-cat="animacao" onclick="filtrarAnuncios('animacao');document.querySelectorAll('.categoria-card').forEach(c=>c.classList.remove('ativo'));this.classList.add('ativo')">
-        <div class="cat-emoji">🎭</div>
-        <div class="cat-nome">Animação</div>
-        <div class="cat-qtd">210 fornecedores</div>
-      </div>
-      <div class="categoria-card" data-cat="floricultura" onclick="filtrarAnuncios('floricultura');document.querySelectorAll('.categoria-card').forEach(c=>c.classList.remove('ativo'));this.classList.add('ativo')">
-        <div class="cat-emoji">💐</div>
-        <div class="cat-nome">Floricultura</div>
-        <div class="cat-qtd">340 fornecedores</div>
-      </div>
-      <div class="categoria-card" data-cat="cerimonia" onclick="filtrarAnuncios('cerimonia');document.querySelectorAll('.categoria-card').forEach(c=>c.classList.remove('ativo'));this.classList.add('ativo')">
-        <div class="cat-emoji">⛪</div>
-        <div class="cat-nome">Cerimônia & Liturgia</div>
-        <div class="cat-qtd">95 fornecedores</div>
-      </div>
-      <div class="categoria-card" data-cat="conveniencia" onclick="filtrarAnuncios('conveniencia');document.querySelectorAll('.categoria-card').forEach(c=>c.classList.remove('ativo'));this.classList.add('ativo')">
-        <div class="cat-emoji">🍹</div>
-        <div class="cat-nome">Open Bar & Drinks</div>
-        <div class="cat-qtd">270 fornecedores</div>
-      </div>
-    </div>
+  <!-- BLOCO CORRIGIDO: categorias-grid (copie e substitua no index.html) -->
+<div class="categorias-grid" id="categorias-grid">
+  <div class="categoria-card ativo" data-cat="todos">
+    <div class="cat-emoji">🎉</div>
+    <div class="cat-nome">Todos</div>
+    <div class="cat-qtd">5.200+ serviços</div>
+  </div>
+  <div class="categoria-card" data-cat="casamento">
+    <div class="cat-emoji">💒</div>
+    <div class="cat-nome">Casamentos</div>
+    <div class="cat-qtd">820 fornecedores</div>
+  </div>
+  <div class="categoria-card" data-cat="formatura">
+    <div class="cat-emoji">🎓</div>
+    <div class="cat-nome">Formatura</div>
+    <div class="cat-qtd">410 fornecedores</div>
+  </div>
+  <div class="categoria-card" data-cat="buffet">
+    <div class="cat-emoji">🍽️</div>
+    <div class="cat-nome">Buffet</div>
+    <div class="cat-qtd">680 fornecedores</div>
+  </div>
+  <div class="categoria-card" data-cat="salao">
+    <div class="cat-emoji">🏛️</div>
+    <div class="cat-nome">Salões de Festa</div>
+    <div class="cat-qtd">530 fornecedores</div>
+  </div>
+  <div class="categoria-card" data-cat="decoracao">
+    <div class="cat-emoji">🌸</div>
+    <div class="cat-nome">Decoração</div>
+    <div class="cat-qtd">720 fornecedores</div>
+  </div>
+  <div class="categoria-card" data-cat="foto-video">
+    <div class="cat-emoji">📸</div>
+    <div class="cat-nome">Foto & Vídeo</div>
+    <div class="cat-qtd">490 fornecedores</div>
+  </div>
+  <div class="categoria-card" data-cat="dj-musica">
+    <div class="cat-emoji">🎵</div>
+    <div class="cat-nome">DJ & Música</div>
+    <div class="cat-qtd">360 fornecedores</div>
+  </div>
+  <div class="categoria-card" data-cat="ingressos">
+    <div class="cat-emoji">🎟️</div>
+    <div class="cat-nome">Shows & Ingressos</div>
+    <div class="cat-qtd">290 fornecedores</div>
+  </div>
+  <div class="categoria-card" data-cat="estrutura">
+    <div class="cat-emoji">⛺</div>
+    <div class="cat-nome">Estrutura</div>
+    <div class="cat-qtd">310 fornecedores</div>
+  </div>
+  <div class="categoria-card" data-cat="locacao">
+    <div class="cat-emoji">🛋️</div>
+    <div class="cat-nome">Locação de Itens</div>
+    <div class="cat-qtd">450 fornecedores</div>
+  </div>
+  <div class="categoria-card" data-cat="iluminacao">
+    <div class="cat-emoji">💡</div>
+    <div class="cat-nome">Iluminação</div>
+    <div class="cat-qtd">280 fornecedores</div>
+  </div>
+  <div class="categoria-card" data-cat="doces">
+    <div class="cat-emoji">🎂</div>
+    <div class="cat-nome">Bolos & Doces</div>
+    <div class="cat-qtd">560 fornecedores</div>
+  </div>
+  <div class="categoria-card" data-cat="seguranca">
+    <div class="cat-emoji">🔐</div>
+    <div class="cat-nome">Segurança</div>
+    <div class="cat-qtd">120 fornecedores</div>
+  </div>
+  <div class="categoria-card" data-cat="convites">
+    <div class="cat-emoji">✉️</div>
+    <div class="cat-nome">Convites</div>
+    <div class="cat-qtd">230 fornecedores</div>
+  </div>
+  <div class="categoria-card" data-cat="transporte">
+    <div class="cat-emoji">🚌</div>
+    <div class="cat-nome">Transporte</div>
+    <div class="cat-qtd">180 fornecedores</div>
+  </div>
+  <div class="categoria-card" data-cat="animacao">
+    <div class="cat-emoji">🎭</div>
+    <div class="cat-nome">Animação</div>
+    <div class="cat-qtd">210 fornecedores</div>
+  </div>
+  <div class="categoria-card" data-cat="floricultura">
+    <div class="cat-emoji">💐</div>
+    <div class="cat-nome">Floricultura</div>
+    <div class="cat-qtd">340 fornecedores</div>
+  </div>
+  <div class="categoria-card" data-cat="cerimonia">
+    <div class="cat-emoji">⛪</div>
+    <div class="cat-nome">Cerimônia & Liturgia</div>
+    <div class="cat-qtd">95 fornecedores</div>
+  </div>
+  <div class="categoria-card" data-cat="open-bar">
+    <div class="cat-emoji">🍹</div>
+    <div class="cat-nome">Open Bar & Drinks</div>
+    <div class="cat-qtd">270 fornecedores</div>
+  </div>
+</div>
+<!-- FIM DO BLOCO CORRIGIDO -->
   </div>
 </section>
 
