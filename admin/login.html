@@ -1,0 +1,1101 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta http-equiv="X-Frame-Options" content="DENY">
+  <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <title>Acesso Restrito — É Festa</title>
+  <link rel="icon" href="../assets/icons/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* ── VARIÁVEIS ── */
+    :root {
+      --vermelho:   #E8163C;
+      --dourado:    #F5A623;
+      --roxo-esc:   #1A0A2E;
+      --roxo-med:   #2D1060;
+      --verde:      #00C896;
+      --cinza-cl:   #F7F5FF;
+      --cinza-med:  #E8E4F0;
+      --cinza-txt:  #6B6480;
+      --branco:     #FFFFFF;
+      --preto:      #0E0820;
+      --fonte-d:    'Playfair Display', serif;
+      --fonte-b:    'Plus Jakarta Sans', sans-serif;
+      --sombra:     0 20px 60px rgba(26,10,46,.4);
+      --t:          all .3s cubic-bezier(.4,0,.2,1);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--fonte-b);
+      background: var(--roxo-esc);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* ── FUNDO ANIMADO ── */
+    .bg-particles {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 0;
+    }
+
+    .particle {
+      position: absolute;
+      border-radius: 50%;
+      opacity: .06;
+      animation: flutuar linear infinite;
+    }
+
+    @keyframes flutuar {
+      0%   { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+      10%  { opacity: .06; }
+      90%  { opacity: .06; }
+      100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+    }
+
+    .bg-gradient {
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 20% 0%, rgba(232,22,60,.15) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 50% at 80% 100%, rgba(245,166,35,.1) 0%, transparent 60%),
+        linear-gradient(135deg, #1A0A2E 0%, #2D1060 50%, #1A0A2E 100%);
+      z-index: 0;
+    }
+
+    /* ── CARD DE LOGIN ── */
+    .login-wrap {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      max-width: 440px;
+      animation: entrar .5s cubic-bezier(.4,0,.2,1) both;
+    }
+
+    @keyframes entrar {
+      from { opacity: 0; transform: translateY(24px) scale(.97); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .login-card {
+      background: rgba(255,255,255,.04);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 24px;
+      padding: 44px 40px;
+      box-shadow: var(--sombra);
+    }
+
+    /* ── LOGO ── */
+    .login-logo {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .logo-icone {
+      width: 64px;
+      height: 64px;
+      background: linear-gradient(135deg, #FF6B9D, #E8163C);
+      border-radius: 18px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      margin-bottom: 14px;
+      box-shadow: 0 8px 24px rgba(232,22,60,.4);
+    }
+
+    .logo-nome {
+      font-family: var(--fonte-d);
+      font-size: 1.8rem;
+      font-weight: 900;
+      color: var(--branco);
+      letter-spacing: -.5px;
+    }
+
+    .logo-nome span { color: var(--dourado); }
+
+    .login-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(232,22,60,.15);
+      color: #ff8fa3;
+      border: 1px solid rgba(232,22,60,.25);
+      border-radius: 100px;
+      padding: 4px 14px;
+      font-size: .75rem;
+      font-weight: 700;
+      letter-spacing: .5px;
+      text-transform: uppercase;
+      margin-top: 8px;
+    }
+
+    /* ── TÍTULO ── */
+    .login-titulo {
+      font-family: var(--fonte-d);
+      font-size: 1.5rem;
+      font-weight: 900;
+      color: var(--branco);
+      text-align: center;
+      margin-bottom: 6px;
+    }
+
+    .login-sub {
+      text-align: center;
+      color: rgba(255,255,255,.5);
+      font-size: .85rem;
+      margin-bottom: 32px;
+    }
+
+    /* ── FORMULÁRIO ── */
+    .form-grupo {
+      margin-bottom: 18px;
+      position: relative;
+    }
+
+    .form-grupo label {
+      display: block;
+      font-size: .82rem;
+      font-weight: 600;
+      color: rgba(255,255,255,.7);
+      margin-bottom: 8px;
+      letter-spacing: .3px;
+    }
+
+    .input-wrap {
+      position: relative;
+    }
+
+    .input-icone {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1rem;
+      pointer-events: none;
+      opacity: .6;
+    }
+
+    .form-grupo input {
+      width: 100%;
+      padding: 14px 48px 14px 46px;
+      background: rgba(255,255,255,.06);
+      border: 1.5px solid rgba(255,255,255,.12);
+      border-radius: 12px;
+      font-size: .95rem;
+      font-family: var(--fonte-b);
+      color: var(--branco);
+      transition: var(--t);
+      outline: none;
+    }
+
+    .form-grupo input::placeholder { color: rgba(255,255,255,.3); }
+
+    .form-grupo input:focus {
+      border-color: var(--vermelho);
+      background: rgba(232,22,60,.08);
+      box-shadow: 0 0 0 3px rgba(232,22,60,.15);
+    }
+
+    .form-grupo input.erro {
+      border-color: #ff4d6d;
+      background: rgba(255,77,109,.08);
+    }
+
+    .form-grupo input.sucesso {
+      border-color: var(--verde);
+    }
+
+    /* Botão mostrar/ocultar senha */
+    .toggle-senha {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: rgba(255,255,255,.4);
+      cursor: pointer;
+      font-size: .9rem;
+      padding: 4px;
+      transition: var(--t);
+      line-height: 1;
+    }
+
+    .toggle-senha:hover { color: rgba(255,255,255,.8); }
+
+    /* Mensagem de erro no campo */
+    .campo-erro {
+      font-size: .75rem;
+      color: #ff8fa3;
+      margin-top: 6px;
+      display: none;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .campo-erro.visivel { display: flex; }
+
+    /* ── CAPTCHA VISUAL ── */
+    .captcha-box {
+      background: rgba(255,255,255,.04);
+      border: 1.5px solid rgba(255,255,255,.1);
+      border-radius: 12px;
+      padding: 16px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 18px;
+      cursor: pointer;
+      transition: var(--t);
+    }
+
+    .captcha-box:hover { border-color: rgba(255,255,255,.2); }
+    .captcha-box.verificado { border-color: var(--verde); }
+
+    .captcha-check {
+      width: 22px;
+      height: 22px;
+      border: 2px solid rgba(255,255,255,.3);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--t);
+      flex-shrink: 0;
+    }
+
+    .captcha-box.verificado .captcha-check {
+      background: var(--verde);
+      border-color: var(--verde);
+    }
+
+    .captcha-check::after {
+      content: '';
+      width: 6px;
+      height: 10px;
+      border: 2px solid transparent;
+      border-top: none;
+      border-left: none;
+      transform: rotate(45deg) translateY(-1px);
+      display: none;
+    }
+
+    .captcha-box.verificado .captcha-check::after {
+      display: block;
+      border-color: white;
+    }
+
+    .captcha-label {
+      font-size: .85rem;
+      color: rgba(255,255,255,.6);
+      flex: 1;
+    }
+
+    .captcha-logo {
+      font-size: .7rem;
+      color: rgba(255,255,255,.3);
+      text-align: right;
+      line-height: 1.4;
+    }
+
+    /* ── BOTÃO ENTRAR ── */
+    .btn-entrar {
+      width: 100%;
+      padding: 15px;
+      background: var(--vermelho);
+      color: var(--branco);
+      border: none;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 700;
+      font-family: var(--fonte-b);
+      cursor: pointer;
+      transition: var(--t);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 4px 20px rgba(232,22,60,.4);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-entrar::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(255,255,255,0);
+      transition: var(--t);
+    }
+
+    .btn-entrar:hover:not(:disabled) {
+      background: #c4102e;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(232,22,60,.5);
+    }
+
+    .btn-entrar:active:not(:disabled) {
+      transform: translateY(0);
+    }
+
+    .btn-entrar:disabled {
+      opacity: .6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* Loading spinner no botão */
+    .spinner {
+      display: none;
+      width: 18px;
+      height: 18px;
+      border: 2px solid rgba(255,255,255,.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: girar .7s linear infinite;
+    }
+
+    @keyframes girar { to { transform: rotate(360deg); } }
+
+    .btn-entrar.carregando .spinner { display: block; }
+    .btn-entrar.carregando .btn-texto { display: none; }
+
+    /* ── ALERTA DE ERRO ── */
+    .alerta {
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-size: .85rem;
+      font-weight: 600;
+      display: none;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 18px;
+      animation: aparecer .3s ease;
+    }
+
+    @keyframes aparecer {
+      from { opacity: 0; transform: translateY(-8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .alerta.visivel { display: flex; }
+
+    .alerta.erro {
+      background: rgba(232,22,60,.15);
+      border: 1px solid rgba(232,22,60,.3);
+      color: #ff8fa3;
+    }
+
+    .alerta.aviso {
+      background: rgba(245,166,35,.12);
+      border: 1px solid rgba(245,166,35,.25);
+      color: #ffc947;
+    }
+
+    .alerta.bloqueio {
+      background: rgba(232,22,60,.2);
+      border: 1px solid rgba(232,22,60,.4);
+      color: #ff6b6b;
+    }
+
+    /* ── CONTADOR DE TENTATIVAS ── */
+    .tentativas-aviso {
+      text-align: center;
+      font-size: .78rem;
+      color: rgba(255,255,255,.3);
+      margin-top: 14px;
+    }
+
+    .tentativas-aviso span { color: var(--dourado); font-weight: 600; }
+
+    /* ── RODAPÉ ── */
+    .login-footer {
+      margin-top: 28px;
+      text-align: center;
+    }
+
+    .login-footer p {
+      font-size: .75rem;
+      color: rgba(255,255,255,.25);
+      line-height: 1.6;
+    }
+
+    .login-footer a {
+      color: rgba(255,255,255,.4);
+      text-decoration: none;
+      transition: var(--t);
+    }
+
+    .login-footer a:hover { color: var(--dourado); }
+
+    /* ── TELA DE BLOQUEIO ── */
+    #tela-bloqueio {
+      display: none;
+      text-align: center;
+      padding: 20px 0;
+    }
+
+    .bloqueio-icone {
+      font-size: 3.5rem;
+      margin-bottom: 16px;
+    }
+
+    .bloqueio-titulo {
+      font-family: var(--fonte-d);
+      font-size: 1.5rem;
+      font-weight: 900;
+      color: var(--vermelho);
+      margin-bottom: 10px;
+    }
+
+    .bloqueio-sub {
+      font-size: .88rem;
+      color: rgba(255,255,255,.5);
+      line-height: 1.7;
+      margin-bottom: 24px;
+    }
+
+    .contador-bloqueio {
+      font-family: var(--fonte-d);
+      font-size: 2.8rem;
+      font-weight: 900;
+      color: var(--dourado);
+      margin-bottom: 8px;
+    }
+
+    .contador-label {
+      font-size: .78rem;
+      color: rgba(255,255,255,.35);
+      text-transform: uppercase;
+      letter-spacing: .5px;
+    }
+
+    /* ── LOG DE ACESSO (visível após login) ── */
+    #tela-sucesso {
+      display: none;
+      text-align: center;
+    }
+
+    .sucesso-icone {
+      font-size: 3rem;
+      margin-bottom: 14px;
+      animation: pulsar .6s ease;
+    }
+
+    @keyframes pulsar {
+      0%   { transform: scale(0); }
+      70%  { transform: scale(1.2); }
+      100% { transform: scale(1); }
+    }
+
+    .sucesso-titulo {
+      font-family: var(--fonte-d);
+      font-size: 1.4rem;
+      font-weight: 900;
+      color: var(--verde);
+      margin-bottom: 8px;
+    }
+
+    .sucesso-sub {
+      font-size: .85rem;
+      color: rgba(255,255,255,.5);
+      margin-bottom: 20px;
+    }
+
+    .progresso-barra {
+      width: 100%;
+      height: 4px;
+      background: rgba(255,255,255,.1);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .progresso-fill {
+      height: 100%;
+      background: var(--verde);
+      border-radius: 2px;
+      animation: progresso 2s linear forwards;
+    }
+
+    @keyframes progresso {
+      from { width: 0%; }
+      to   { width: 100%; }
+    }
+
+    /* ── RESPONSIVO ── */
+    @media(max-width: 480px) {
+      .login-card { padding: 32px 24px; }
+      .login-titulo { font-size: 1.3rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Fundo animado -->
+<div class="bg-gradient"></div>
+<div class="bg-particles" id="particles"></div>
+
+<!-- Card de login -->
+<div class="login-wrap">
+  <div class="login-card">
+
+    <!-- Logo -->
+    <div class="login-logo">
+      <div class="logo-icone">🎉</div>
+      <div class="logo-nome">É <span>Festa</span></div>
+      <div class="login-badge">🔒 Área Restrita</div>
+    </div>
+
+    <!-- TELA: Formulário de login -->
+    <div id="tela-login">
+      <h1 class="login-titulo">Acesso Administrativo</h1>
+      <p class="login-sub">Somente pessoal autorizado. Todos os acessos são registrados.</p>
+
+      <!-- Alerta de erro -->
+      <div class="alerta erro" id="alerta-erro">
+        <span>🚫</span>
+        <span id="msg-erro">Credenciais inválidas.</span>
+      </div>
+
+      <!-- Formulário -->
+      <form id="form-login" autocomplete="off" novalidate>
+
+        <!-- Campo: e-mail -->
+        <div class="form-grupo">
+          <label for="campo-email">E-mail do administrador</label>
+          <div class="input-wrap">
+            <span class="input-icone">📧</span>
+            <input
+              type="email"
+              id="campo-email"
+              name="email"
+              placeholder="admin@efesta.com.br"
+              autocomplete="username"
+              required
+              maxlength="100"
+            >
+          </div>
+          <div class="campo-erro" id="erro-email">
+            <span>⚠️</span> E-mail inválido.
+          </div>
+        </div>
+
+        <!-- Campo: senha -->
+        <div class="form-grupo">
+          <label for="campo-senha">Senha</label>
+          <div class="input-wrap">
+            <span class="input-icone">🔑</span>
+            <input
+              type="password"
+              id="campo-senha"
+              name="password"
+              placeholder="••••••••••••"
+              autocomplete="current-password"
+              required
+              maxlength="128"
+            >
+            <button type="button" class="toggle-senha" id="toggle-senha" aria-label="Mostrar senha">
+              👁️
+            </button>
+          </div>
+          <div class="campo-erro" id="erro-senha">
+            <span>⚠️</span> Senha obrigatória.
+          </div>
+        </div>
+
+        <!-- Captcha simulado -->
+        <div class="captcha-box" id="captcha-box" role="checkbox" aria-checked="false" tabindex="0">
+          <div class="captcha-check" id="captcha-check"></div>
+          <span class="captcha-label">Não sou um robô</span>
+          <div class="captcha-logo">🛡️<br>Seguro</div>
+        </div>
+
+        <!-- Botão entrar -->
+        <button type="submit" class="btn-entrar" id="btn-entrar" disabled>
+          <span class="spinner"></span>
+          <span class="btn-texto">🔓 Entrar no painel</span>
+        </button>
+
+      </form>
+
+      <!-- Contador de tentativas -->
+      <p class="tentativas-aviso" id="aviso-tentativas" style="display:none;">
+        Tentativas restantes: <span id="num-tentativas">3</span>
+      </p>
+
+      <!-- Rodapé -->
+      <div class="login-footer">
+        <p>
+          <a href="../index.html">← Voltar ao site</a>
+          &nbsp;·&nbsp;
+          <a href="../pages/privacidade.html">Privacidade</a>
+        </p>
+        <p style="margin-top:8px;">
+          Acesso monitorado · IP registrado · É Festa © 2025
+        </p>
+      </div>
+    </div>
+
+    <!-- TELA: Conta bloqueada -->
+    <div id="tela-bloqueio">
+      <div class="bloqueio-icone">🚫</div>
+      <div class="bloqueio-titulo">Acesso Bloqueado</div>
+      <p class="bloqueio-sub">
+        Muitas tentativas incorretas foram detectadas.<br>
+        Por segurança, o acesso foi temporariamente bloqueado.
+      </p>
+      <div class="contador-bloqueio" id="contador-bloqueio">5:00</div>
+      <div class="contador-label">Aguarde para tentar novamente</div>
+      <div class="login-footer" style="margin-top:20px;">
+        <p>Se não foi você, entre em contato: <a href="mailto:admin@efesta.com.br">admin@efesta.com.br</a></p>
+      </div>
+    </div>
+
+    <!-- TELA: Acesso concedido -->
+    <div id="tela-sucesso">
+      <div class="sucesso-icone">✅</div>
+      <div class="sucesso-titulo">Acesso Autorizado!</div>
+      <p class="sucesso-sub">Redirecionando para o painel...</p>
+      <div class="progresso-barra">
+        <div class="progresso-fill"></div>
+      </div>
+    </div>
+
+  </div><!-- fim login-card -->
+</div><!-- fim login-wrap -->
+
+
+<script>
+// ============================================================
+// É FESTA — Login Admin com Segurança
+// ============================================================
+
+// ── CONFIGURAÇÃO (ALTERE AQUI) ───────────────────────────────
+// IMPORTANTE: Em produção, NUNCA faça validação só no frontend.
+// Use sempre o backend Python (FastAPI) para autenticar.
+// Esta configuração é apenas para demonstração / GitHub Pages.
+const CONFIG = {
+  // Credenciais de demonstração (TROQUE em produção)
+  // Em produção: remova isso e use a API: POST /api/auth/login
+  ADMIN_EMAIL: 'admin@efesta.com.br',
+  ADMIN_SENHA: 'Admin@2025!',           // Troque por uma senha forte
+
+  MAX_TENTATIVAS:  5,           // Bloqueia após 5 erros
+  BLOQUEIO_MINUTOS: 5,          // Minutos de bloqueio
+  DESTINO_APOS_LOGIN: 'index.html', // Página do painel após login
+  SESSION_KEY: 'ef_admin_session',
+  BLOQUEIO_KEY: 'ef_admin_bloqueio',
+  TOKEN_VALIDADE_HORAS: 8,      // Sessão expira em 8 horas
+};
+// ─────────────────────────────────────────────────────────────
+
+// Elementos
+const form          = document.getElementById('form-login');
+const emailInput    = document.getElementById('campo-email');
+const senhaInput    = document.getElementById('campo-senha');
+const btnEntrar     = document.getElementById('btn-entrar');
+const captchaBox    = document.getElementById('captcha-box');
+const alertaErro    = document.getElementById('alerta-erro');
+const msgErro       = document.getElementById('msg-erro');
+const avisoTent     = document.getElementById('aviso-tentativas');
+const numTent       = document.getElementById('num-tentativas');
+const telaLogin     = document.getElementById('tela-login');
+const telaBloqueio  = document.getElementById('tela-bloqueio');
+const telaSucesso   = document.getElementById('tela-sucesso');
+
+let captchaOk = false;
+let tentativas = parseInt(sessionStorage.getItem('ef_tentativas') || '0');
+
+// ── INICIALIZAÇÃO ────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  gerarParticulas();
+  verificarSessaoAtiva();
+  verificarBloqueio();
+  initCaptcha();
+  initToggleSenha();
+  initValidacaoTempo();
+  registrarAcesso();
+  bloquearFerramentasDevBasico();
+});
+
+// ── VERIFICAR SESSÃO ATIVA ───────────────────────────────────
+function verificarSessaoAtiva() {
+  const sessao = sessionStorage.getItem(CONFIG.SESSION_KEY);
+  if (!sessao) return;
+  try {
+    const dados = JSON.parse(atob(sessao));
+    const agora = Date.now();
+    const expirou = dados.expira && agora > dados.expira;
+    if (!expirou && dados.tipo === 'admin') {
+      // Já está logado → redirecionar direto
+      window.location.replace(CONFIG.DESTINO_APOS_LOGIN);
+    } else {
+      sessionStorage.removeItem(CONFIG.SESSION_KEY);
+    }
+  } catch(e) {
+    sessionStorage.removeItem(CONFIG.SESSION_KEY);
+  }
+}
+
+// ── VERIFICAR BLOQUEIO ───────────────────────────────────────
+function verificarBloqueio() {
+  const bloqueio = localStorage.getItem(CONFIG.BLOQUEIO_KEY);
+  if (!bloqueio) return;
+  const ate = parseInt(bloqueio);
+  const agora = Date.now();
+  if (agora < ate) {
+    mostrarTelaBloqueio(ate);
+  } else {
+    localStorage.removeItem(CONFIG.BLOQUEIO_KEY);
+    sessionStorage.setItem('ef_tentativas', '0');
+    tentativas = 0;
+  }
+}
+
+// ── CAPTCHA SIMULADO ─────────────────────────────────────────
+function initCaptcha() {
+  const ativar = () => {
+    // Simula verificação com delay aleatório
+    captchaBox.style.opacity = '.6';
+    captchaBox.style.cursor = 'wait';
+    setTimeout(() => {
+      captchaOk = true;
+      captchaBox.classList.add('verificado');
+      captchaBox.setAttribute('aria-checked', 'true');
+      captchaBox.style.opacity = '1';
+      captchaBox.style.cursor = 'default';
+      atualizarBotao();
+    }, Math.random() * 800 + 400);
+  };
+
+  captchaBox.addEventListener('click', () => { if (!captchaOk) ativar(); });
+  captchaBox.addEventListener('keydown', e => {
+    if ((e.key === 'Enter' || e.key === ' ') && !captchaOk) { e.preventDefault(); ativar(); }
+  });
+}
+
+// ── TOGGLE SENHA ─────────────────────────────────────────────
+function initToggleSenha() {
+  const btn = document.getElementById('toggle-senha');
+  btn.addEventListener('click', () => {
+    const tipo = senhaInput.type === 'password' ? 'text' : 'password';
+    senhaInput.type = tipo;
+    btn.textContent = tipo === 'password' ? '👁️' : '🙈';
+    btn.setAttribute('aria-label', tipo === 'password' ? 'Mostrar senha' : 'Ocultar senha');
+  });
+}
+
+// ── VALIDAÇÃO EM TEMPO REAL ───────────────────────────────────
+function initValidacaoTempo() {
+  emailInput.addEventListener('input', () => {
+    emailInput.classList.remove('erro','sucesso');
+    document.getElementById('erro-email').classList.remove('visivel');
+    atualizarBotao();
+  });
+
+  emailInput.addEventListener('blur', () => {
+    if (emailInput.value && !isEmailValido(emailInput.value)) {
+      emailInput.classList.add('erro');
+      document.getElementById('erro-email').classList.add('visivel');
+    } else if (emailInput.value) {
+      emailInput.classList.add('sucesso');
+    }
+    atualizarBotao();
+  });
+
+  senhaInput.addEventListener('input', () => {
+    senhaInput.classList.remove('erro','sucesso');
+    document.getElementById('erro-senha').classList.remove('visivel');
+    atualizarBotao();
+  });
+}
+
+function atualizarBotao() {
+  const emailOk = emailInput.value.length > 0 && isEmailValido(emailInput.value);
+  const senhaOk = senhaInput.value.length >= 6;
+  btnEntrar.disabled = !(emailOk && senhaOk && captchaOk);
+}
+
+// ── SUBMIT DO FORMULÁRIO ─────────────────────────────────────
+form.addEventListener('submit', async e => {
+  e.preventDefault();
+
+  if (!captchaOk) {
+    mostrarErro('Por favor, confirme que você não é um robô.');
+    return;
+  }
+
+  const email = sanitizar(emailInput.value.trim().toLowerCase());
+  const senha = senhaInput.value;
+
+  // Mostrar loading
+  btnEntrar.classList.add('carregando');
+  btnEntrar.disabled = true;
+  ocultarErro();
+
+  // Delay artificial (simula chamada ao servidor)
+  await delay(800 + Math.random() * 600);
+
+  // ── AUTENTICAÇÃO ─────────────────────────────────────────
+  // Em produção: substitua por chamada ao backend Python:
+  // const ok = await autenticarComBackend(email, senha);
+  const ok = autenticarLocal(email, senha);
+
+  if (ok) {
+    aoLogarComSucesso(email);
+  } else {
+    aoFalharLogin();
+  }
+});
+
+// Autenticação local (somente para demo/GitHub Pages)
+function autenticarLocal(email, senha) {
+  return email === CONFIG.ADMIN_EMAIL.toLowerCase() && senha === CONFIG.ADMIN_SENHA;
+}
+
+// Autenticação via backend Python (use em produção)
+async function autenticarComBackend(email, senha) {
+  try {
+    const form = new FormData();
+    form.append('username', email);
+    form.append('password', senha);
+    const resp = await fetch('/api/auth/login', { method: 'POST', body: form });
+    const data = await resp.json();
+    if (!resp.ok) return false;
+    if (data.usuario?.tipo !== 'admin') return false;
+    sessionStorage.setItem('ef_token', data.access_token);
+    return true;
+  } catch(e) {
+    return false;
+  }
+}
+
+// ── AO LOGAR COM SUCESSO ─────────────────────────────────────
+function aoLogarComSucesso(email) {
+  btnEntrar.classList.remove('carregando');
+
+  // Limpar tentativas
+  sessionStorage.setItem('ef_tentativas', '0');
+  tentativas = 0;
+  localStorage.removeItem(CONFIG.BLOQUEIO_KEY);
+
+  // Criar token de sessão
+  const sessao = {
+    email:  email,
+    tipo:   'admin',
+    inicio: Date.now(),
+    expira: Date.now() + (CONFIG.TOKEN_VALIDADE_HORAS * 60 * 60 * 1000),
+    ip:     'client',
+  };
+  sessionStorage.setItem(CONFIG.SESSION_KEY, btoa(JSON.stringify(sessao)));
+
+  // Registrar log
+  registrarLog('LOGIN_SUCESSO', email);
+
+  // Mostrar tela de sucesso
+  telaLogin.style.display = 'none';
+  telaSucesso.style.display = 'block';
+
+  // Redirecionar após 2 segundos
+  setTimeout(() => {
+    window.location.replace(CONFIG.DESTINO_APOS_LOGIN);
+  }, 2000);
+}
+
+// ── AO FALHAR LOGIN ──────────────────────────────────────────
+function aoFalharLogin() {
+  btnEntrar.classList.remove('carregando');
+  tentativas++;
+  sessionStorage.setItem('ef_tentativas', tentativas.toString());
+  registrarLog('LOGIN_FALHA', emailInput.value);
+
+  const restantes = CONFIG.MAX_TENTATIVAS - tentativas;
+
+  if (tentativas >= CONFIG.MAX_TENTATIVAS) {
+    // Bloquear conta
+    const ateQuando = Date.now() + (CONFIG.BLOQUEIO_MINUTOS * 60 * 1000);
+    localStorage.setItem(CONFIG.BLOQUEIO_KEY, ateQuando.toString());
+    mostrarTelaBloqueio(ateQuando);
+    return;
+  }
+
+  // Mostrar erro com contagem
+  emailInput.classList.add('erro');
+  senhaInput.classList.add('erro');
+  senhaInput.value = ''; // Limpar senha
+  captchaOk = false;
+  captchaBox.classList.remove('verificado');
+  captchaBox.setAttribute('aria-checked','false');
+
+  if (restantes <= 2) {
+    mostrarErro(`E-mail ou senha incorretos. ${restantes} tentativa${restantes !== 1 ? 's' : ''} restante${restantes !== 1 ? 's' : ''}.`);
+    avisoTent.style.display = 'block';
+    numTent.textContent = restantes;
+  } else {
+    mostrarErro('E-mail ou senha incorretos. Verifique e tente novamente.');
+  }
+
+  btnEntrar.disabled = true;
+  atualizarBotao();
+
+  // Shake animation no card
+  const card = document.querySelector('.login-card');
+  card.style.animation = 'shake .4s ease';
+  setTimeout(() => { card.style.animation = ''; }, 400);
+}
+
+// ── TELA DE BLOQUEIO ─────────────────────────────────────────
+function mostrarTelaBloqueio(ateQuando) {
+  telaLogin.style.display = 'none';
+  telaBloqueio.style.display = 'block';
+
+  const el = document.getElementById('contador-bloqueio');
+  const atualizar = () => {
+    const restante = ateQuando - Date.now();
+    if (restante <= 0) {
+      localStorage.removeItem(CONFIG.BLOQUEIO_KEY);
+      sessionStorage.setItem('ef_tentativas','0');
+      tentativas = 0;
+      telaBloqueio.style.display = 'none';
+      telaLogin.style.display = 'block';
+      clearInterval(timer);
+      return;
+    }
+    const min = Math.floor(restante / 60000);
+    const seg = Math.floor((restante % 60000) / 1000);
+    el.textContent = `${min}:${seg.toString().padStart(2,'0')}`;
+  };
+  atualizar();
+  const timer = setInterval(atualizar, 1000);
+}
+
+// ── UTILITÁRIOS ──────────────────────────────────────────────
+function mostrarErro(msg) {
+  msgErro.textContent = msg;
+  alertaErro.classList.add('visivel');
+}
+
+function ocultarErro() {
+  alertaErro.classList.remove('visivel');
+  emailInput.classList.remove('erro');
+  senhaInput.classList.remove('erro');
+}
+
+function isEmailValido(email) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+function sanitizar(texto) {
+  return texto.replace(/<[^>]*>/g, '').replace(/['"`;]/g, '').trim();
+}
+
+function delay(ms) {
+  return new Promise(res => setTimeout(res, ms));
+}
+
+// ── REGISTRO DE LOG ──────────────────────────────────────────
+function registrarLog(tipo, email) {
+  const log = {
+    tipo,
+    email:     sanitizar(email || ''),
+    timestamp: new Date().toISOString(),
+    userAgent: navigator.userAgent.substring(0, 100),
+    pagina:    window.location.pathname,
+  };
+  // Guardar últimos 20 logs
+  const logs = JSON.parse(localStorage.getItem('ef_admin_logs') || '[]');
+  logs.unshift(log);
+  localStorage.setItem('ef_admin_logs', JSON.stringify(logs.slice(0, 20)));
+  console.info(`[É Festa Admin] ${tipo} | ${email} | ${log.timestamp}`);
+}
+
+function registrarAcesso() {
+  registrarLog('ACESSO_PAGINA', '');
+}
+
+// ── PROTEÇÃO BÁSICA CONTRA DEVTOOLS ─────────────────────────
+function bloquearFerramentasDevBasico() {
+  // Desabilitar clique direito nesta página
+  document.addEventListener('contextmenu', e => e.preventDefault());
+
+  // Detectar DevTools aberto (heurística básica)
+  const detector = () => {
+    const d = window.outerWidth - window.innerWidth > 160 ||
+              window.outerHeight - window.innerHeight > 160;
+    if (d) {
+      senhaInput.value = '';
+      mostrarErro('Por segurança, feche o DevTools para acessar o painel.');
+      btnEntrar.disabled = true;
+    }
+  };
+  window.addEventListener('resize', detector);
+  setInterval(detector, 3000);
+
+  // Bloquear atalhos de DevTools
+  document.addEventListener('keydown', e => {
+    if (
+      e.key === 'F12' ||
+      (e.ctrlKey && e.shiftKey && ['I','J','C'].includes(e.key)) ||
+      (e.ctrlKey && e.key === 'U')
+    ) {
+      e.preventDefault();
+      return false;
+    }
+  });
+}
+
+// ── PARTÍCULAS DE FUNDO ──────────────────────────────────────
+function gerarParticulas() {
+  const container = document.getElementById('particles');
+  const cores = ['#E8163C','#F5A623','#FF6B9D','#00C896'];
+  for (let i = 0; i < 20; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    const size = Math.random() * 60 + 20;
+    p.style.cssText = [
+      `width:${size}px`,
+      `height:${size}px`,
+      `left:${Math.random()*100}%`,
+      `background:${cores[Math.floor(Math.random()*cores.length)]}`,
+      `animation-duration:${Math.random()*20+15}s`,
+      `animation-delay:${Math.random()*10}s`,
+    ].join(';');
+    container.appendChild(p);
+  }
+}
+
+// ── CSS ANIMAÇÃO SHAKE ───────────────────────────────────────
+const style = document.createElement('style');
+style.textContent = `
+  @keyframes shake {
+    0%,100% { transform: translateX(0); }
+    20%      { transform: translateX(-8px); }
+    40%      { transform: translateX(8px); }
+    60%      { transform: translateX(-5px); }
+    80%      { transform: translateX(5px); }
+  }
+`;
+document.head.appendChild(style);
+</script>
+</body>
+</html>
